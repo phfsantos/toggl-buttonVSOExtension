@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Toggl Button for VSO</title>
+	<meta charset="utf-8" />
+    <script src="sdk/scripts/VSS.SDK.js"></script>
+    <script src="scripts/app.js"></script>
+    <link rel="stylesheet" href="style/app.css" />
+</head>
+<body>
+    <script type="text/javascript">
+        //Initialize SDK
+        VSS.init({
+            setupModuleLoader: true/*,
+            moduleLoaderConfig: {
+                paths: {
+                    "Scripts": "scripts"
+                }
+            }*/
+        });
+
+        /*VSS.ready(function () {
+            require(["Scripts/app"], function (app) { });
+        });*/
+
+        var menuContributionHandler = (function () {
+            "use strict";
+            return {
+                execute: function (actionContext) {
+                    alert("Toggl Button");
+                }
+            };
+        });
+
+        VSS.register("togglBtn", menuContributionHandler);
+
+
+    </script>
+
+    <h1>Toggl Button</h1>
+    <div id="content"></div>
+</body>
+</html>

@@ -1,0 +1,5 @@
+D:\rangers\vsoExtensions\TogglButton\VSOTogglButton\bin\VSOTogglButton.dll
+D:\rangers\vsoExtensions\TogglButton\VSOTogglButton\bin\VSOTogglButton.pdb
+D:\rangers\vsoExtensions\TogglButton\VSOTogglButton\obj\Release\VSOTogglButton.csprojResolveAssemblyReference.cache
+D:\rangers\vsoExtensions\TogglButton\VSOTogglButton\obj\Release\VSOTogglButton.dll
+D:\rangers\vsoExtensions\TogglButton\VSOTogglButton\obj\Release\VSOTogglButton.pdb
