@@ -10,12 +10,14 @@
     "vss.work.web#workItemToolbarActions":  [
       {
         "id": "TogglButton",
-        "text": "Toggl Button",
+        "text": "",
         "title": "TogglButton",
         "toolbarText": "Start Time",
-        "icon": "https://toggl.com/images/share-img/apple-touch-icon-57x57.png",
+        "icon": "images/inactive-16.png",
         "group": "actions",
-        "uri": "TogglButton.html"
+        "uri": "TogglButton.html",
+        "usesSdk": true,
+        "fullPage": false
       }
     ]
   }
