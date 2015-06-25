@@ -1,5 +1,0 @@
-D:\rangers\vsoExtensions\TogglButton\VSOTogglButton\bin\VSOTogglButton.dll
-D:\rangers\vsoExtensions\TogglButton\VSOTogglButton\bin\VSOTogglButton.pdb
-D:\rangers\vsoExtensions\TogglButton\VSOTogglButton\obj\Debug\VSOTogglButton.csprojResolveAssemblyReference.cache
-D:\rangers\vsoExtensions\TogglButton\VSOTogglButton\obj\Debug\VSOTogglButton.dll
-D:\rangers\vsoExtensions\TogglButton\VSOTogglButton\obj\Debug\VSOTogglButton.pdb

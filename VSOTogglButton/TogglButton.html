@@ -4,49 +4,43 @@
     <title>Toggl Button for VSO</title>
 	<meta charset="utf-8" />
     <link rel="stylesheet" href="style/app.css" />
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
 </head>
 <body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src="sdk/scripts/VSS.SDK.js"></script>
     <script src="scripts/app.js"></script>
     <script type="text/javascript">
-        VSS.init({ setupModuleLoader: true });
+        VSS.init({
+            //explicitNotifyLoaded: true,
+            setupModuleLoader: true,
+            moduleLoaderPathMappings: {
+                "Scripts": "/scripts/"
+            }
+        });
 
-
-        ////Initialize SDK
-        //VSS.init({
-        //    setupModuleLoader: true,
-        //    moduleLoaderConfig: {
-        //        paths: {
-        //            "Scripts": "scripts"
-        //        }
-        //    }
-        //});
-
-        //window.action = (function () {
-        //    "use strict";
-        //    return {
-        //        myAction: function (actionContext) {
-        //            alert('Hello World');
-        //        }
-        //    };
-        //}());
-
-        ////VSS.ready(function () {
-        ////    require(["Scripts/app"], function (app) { });
-        ////});
-
-        ////var menuContributionHandler = (function () {
-        ////    "use strict";
-        ////    return {
-        ////        execute: function (actionContext) {
-        ////            alert("Toggl Button");
-        ////        }
-        ////    };
-        ////});
-
-        ////VSS.register("togglBtn", menuContributionHandler);
-
-
+        //VSS.ready(function () {
+        //    require(["VSS/Controls"],
+        //        function (Controls) {
+        //            console.log(Controls);
+        //            });
+        //        });
     </script>
+    <div id="container" title="Toggl Button">
+        <h1>Toggl Button</h1>
+        <ul>
+            <li>
+                <label for="txtTitle">Title</label><input type="text" id="txtTitle" />
+            </li>
+            <li>
+                <label for="txtProject">Project</label><input type="text" id="txtProject" />
+            </li>
+            <li>
+                <label for="txtTags">Tags</label><input type="text" id="txtTags" />
+            </li>
+
+        </ul>
+    </div> 
 </body>
 </html>

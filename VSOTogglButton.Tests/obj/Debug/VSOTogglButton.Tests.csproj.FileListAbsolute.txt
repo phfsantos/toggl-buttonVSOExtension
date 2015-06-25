@@ -1,7 +1,0 @@
-D:\rangers\vsoExtensions\TogglButton\VSOTogglButton.Tests\bin\Debug\VSOTogglButton.Tests.dll
-D:\rangers\vsoExtensions\TogglButton\VSOTogglButton.Tests\bin\Debug\VSOTogglButton.Tests.pdb
-D:\rangers\vsoExtensions\TogglButton\VSOTogglButton.Tests\bin\Debug\VSOTogglButton.dll
-D:\rangers\vsoExtensions\TogglButton\VSOTogglButton.Tests\bin\Debug\VSOTogglButton.pdb
-D:\rangers\vsoExtensions\TogglButton\VSOTogglButton.Tests\obj\Debug\VSOTogglButton.Tests.csprojResolveAssemblyReference.cache
-D:\rangers\vsoExtensions\TogglButton\VSOTogglButton.Tests\obj\Debug\VSOTogglButton.Tests.dll
-D:\rangers\vsoExtensions\TogglButton\VSOTogglButton.Tests\obj\Debug\VSOTogglButton.Tests.pdb
