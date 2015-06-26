@@ -7,7 +7,7 @@
   "baseUri": "https://togglbtn-vso.azurewebsites.net/",
   "icon": "https://toggl.com/images/share-img/apple-touch-icon-72x72.png",
   "contributions": {
-    "vss.work.web#workItemToolbarActions":  [
+    "vss.work.web#workItemToolbarActions": [
       {
         "id": "TogglButton",
         "text": "",
@@ -15,10 +15,20 @@
         "toolbarText": "Start Time",
         "icon": "images/inactive-16.png",
         "group": "actions",
-        "uri": "TogglButton.html",
-        "usesSdk": true,
-        "fullPage": false
+        "uri": "main.html"
+      }
+    ],
+    "#dialog": [
+      {
+        "id": "togglButtonDialog",
+        "uri": "TogglButton.html"
       }
     ]
+  },
+  "contributionPoints": {
+    "dialog": {
+      "type": "vss.web#control",
+      "description": "Provider of contribution controls."
+    }
   }
 }

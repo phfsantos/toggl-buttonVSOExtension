@@ -62,6 +62,8 @@
     <Content Include="images\active-16.png" />
     <Content Include="images\apple-touch-icon-57x57.png" />
     <Content Include="images\inactive-16.png" />
+    <Content Include="main.html" />
+    <Content Include="scripts\main.js" />
     <Content Include="style\app.css" />
   </ItemGroup>
   <ItemGroup>

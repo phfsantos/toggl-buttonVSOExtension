@@ -1,25 +1,15 @@
-﻿togglButton = (function () {
-    "use strict";
+﻿/// <reference path="../sdk/scripts/VSS.SDK.js" />
 
-    var changeImage = function () {
-        var img = $('.menu-item[title=TogglButton]').find('img');
+//var TogglButtonHandler = (function (_super) {
+//    this.dialogCallback = function (context) {
+//        alert('dialogCallback WorkItemId' + context.id);
+//    }
+//    return TogglButtonHandler;
+//})();
 
-        if (img.length) {
-            if (img.attr('src').contains('inactive')) {
-                img.attr('src', 'https://togglbtn-vso.azurewebsites.net/images/active-16.png');
-            } else if (img.attr('src').contains('active')) {
-                img.attr('src', 'https://togglbtn-vso.azurewebsites.net/images/inactive-16.png');
-            }
-        }
-    }
 
-    return {
-        execute: function (workItemContext) {
-            changeImage();
+VSS.register("togglButtonDialog", function (context) {
+    //return new TogglButtonHandler();
+});
 
-            $('#container').dialog();
-        }
-    };
-}());
-
-VSS.register('TogglButton', togglButton);
+VSS.notifyLoadSucceeded();
