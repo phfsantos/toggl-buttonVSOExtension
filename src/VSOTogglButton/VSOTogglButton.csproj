@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="images\active-16.png" />
+    <Content Include="images\apple-touch-icon-72x72.png" />
     <Content Include="images\apple-touch-icon-57x57.png" />
     <Content Include="images\inactive-16.png" />
     <Content Include="main.html" />
@@ -74,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\PublishProfiles\togglbtn-vso.pubxml" />
+    <Content Include="vss-extension.json" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
