@@ -203,3 +203,6 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+
+# Visual studio Extension settings file
+*.vset.json
