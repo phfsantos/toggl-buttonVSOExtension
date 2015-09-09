@@ -1,33 +1,12 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Toggl Button for VSO</title>
-	<meta charset="utf-8" />
-    <link rel="stylesheet" href="style/app.css" />
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
-</head>
-<body>
-    <div id="container" title="Toggl Button">
-        <h1>Toggl Button</h1>
-        <ul>
-            <li>
-                <label for="txtTitle">Title</label><input type="text" id="txtTitle" />
-            </li>
-            <li>
-                <label for="txtProject">Project</label><input type="text" id="txtProject" />
-            </li>
-            <li>
-                <label for="txtTags">Tags</label><input type="text" id="txtTags" />
-            </li>
-        </ul>
-    </div> 
+    <link rel="stylesheet" href="css/app.css" />
     <script src="sdk/scripts/VSS.SDK.js"></script>
+    <script src="scripts/TogglButtonForm.js"></script>
+    <script src="scripts/TogglButtonLauncher.js"></script>
     <script src="scripts/app.js"></script>
-    <script type="text/javascript">
-        VSS.init({
-            explicitNotifyLoaded: true,
-            setupModuleLoader: true
-        });
-    </script>
-</body>
+    <script type="text/javascript">VSS.init({ usePlatformScripts: true, usePlatformStyles: true });</script>
+</head>
+<body></body>
 </html>

@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -20,6 +21,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
+    <TypeScriptToolsVersion>1.5</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -59,29 +61,47 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="css\app.css" />
     <Content Include="images\active-16.png" />
     <Content Include="images\apple-touch-icon-72x72.png" />
     <Content Include="images\apple-touch-icon-57x57.png" />
     <Content Include="images\inactive-16.png" />
-    <Content Include="main.html" />
-    <Content Include="scripts\main.js" />
+    <Content Include="scripts\app.js" />
+    <Content Include="scripts\TogglButtonForm.js" />
+    <Content Include="scripts\TogglButtonLauncher.js" />
     <Content Include="style\app.css" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="extension.json" />
-    <Content Include="scripts\app.js" />
     <Content Include="sdk\scripts\VSS.SDK.js" />
     <Content Include="TogglButton.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\PublishProfiles\togglbtn-vso.pubxml" />
+    <Content Include="TogglButtonForm.html" />
     <Content Include="vss-extension.json" />
+    <Content Include="scripts\app.js.map" />
+    <Content Include="scripts\TogglButtonForm.js.map" />
+    <Content Include="scripts\TogglButtonLauncher.js.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="scripts\app.ts" />
+    <TypeScriptCompile Include="scripts\ref\jquery.d.ts" />
+    <TypeScriptCompile Include="scripts\ref\knockout.d.ts" />
+    <TypeScriptCompile Include="scripts\ref\q.d.ts" />
+    <TypeScriptCompile Include="scripts\ref\VSS.d.ts" />
+    <TypeScriptCompile Include="scripts\TogglButtonForm.ts" />
+    <TypeScriptCompile Include="scripts\TogglButtonLauncher.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <ProjectExtensions>

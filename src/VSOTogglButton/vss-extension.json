@@ -1,13 +1,13 @@
 {
   "namespace": "VSO-Toggl-Button",
-  "version": "0.0.2",
+  "version": "0.0.2.1",
   "name": "Toggl-Button",
   "description": "VSO Extension to integrate with toggl.com app",
   "provider": { "name": "Gerson Dias" },
   "baseUri": "https://togglbtn-vso.azurewebsites.net",
-  "categories": ["Productivity", "Sync and integration"],
+  "categories": [ "Productivity", "Sync and integration" ],
   "icons": {
-	"default": "/images/apple-touch-icon-72x72.png"
+    "default": "/images/apple-touch-icon-72x72.png"
   },
   "contributions": [
     {
@@ -15,7 +15,7 @@
       "type": "ms.vss-web.action",
       "description": "Track time for this workitem",
       "targets": [
-        "ms.vss-work-web.work-item-toolbar-menu"        
+        "ms.vss-work-web.work-item-toolbar-menu"
       ],
       "properties": {
         "text": "",
@@ -25,6 +25,14 @@
         "group": "actions",
         "uri": "TogglButton.html",
         "registeredObjectId": "TogglButton"
+      }
+    },
+    {
+      "id": "TogglButtonForm",
+      "targets": [ ".controls" ],
+      "type": "ms.vss-web.control",
+      "properties": {
+        "url":  "TogglButtonForm.html"
       }
     }
   ],
