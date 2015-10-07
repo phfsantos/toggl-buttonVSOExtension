@@ -13,6 +13,12 @@ var TogglButtonForm = (function () {
         $('#btnRefresh').click(function () {
             self.fetchTogglInformations();
         });
+        $('#btnStop').click(function () {
+            self.stopCurrentTimer();
+        });
+        $('#btnDiscard').click(function () {
+            self.discardCurrentTimer();
+        });
         $('#txtDescription').val(this.workItem.fields["System.Title"] + " (id: " + this.workItem.id + ")");
         this.loadAPIKey();
         $('#txtAPIKey').on('change', function () {
@@ -25,27 +31,17 @@ var TogglButtonForm = (function () {
     };
     ;
     TogglButtonForm.prototype.hideInfosFromToggl = function () {
+        $('#startTimer').show();
         $('#project').hide();
         $('#tags').hide();
         $('#btnRefresh').show();
     };
     TogglButtonForm.prototype.showInfosFromToggl = function () {
+        $('#startTimer').show();
+        $('#stopTimer').hide();
         $('#project').show();
         $('#tags').show();
         $('#tagsSelect').chosen();
-        //$('#projectSelect').chosen();
-        // Add new tags... need improviment.
-        // $('.search-field').find('input').on('change', function(e) { 
-        //     var newValue = $('.search-field').find('input').val();
-        //     var $tagSelect = $('#tagsSelect');
-        //     
-        //     if ($tagSelect.find('option[value="' + newValue + '"]').length !== 0)
-        //         return;
-        //      
-        //     $tagSelect.append('<option value="' + newValue + '">' + newValue + '</option>');
-        //     $tagSelect.val(newValue);
-        //     $tagSelect.trigger("chosen:updated");    
-        // });
         $('#btnRefresh').hide();
     };
     TogglButtonForm.prototype.fetchTogglInformations = function () {
@@ -55,9 +51,15 @@ var TogglButtonForm = (function () {
             data: { apikey: $('#txtAPIKey').val() },
             success: function (data) {
                 self.errorMessage(null);
-                self.fillTagsInfo(data.tags);
-                self.fillProjectsAndClientsInfo(data.clients, data.projects);
-                self.showInfosFromToggl();
+                var currentTimer = data.time_entries.find(function (t) { return t.duration < 0; });
+                if (currentTimer) {
+                    self.showCurrentTimer(currentTimer);
+                }
+                else {
+                    self.fillTagsInfo(data.tags);
+                    self.fillProjectsAndClientsInfo(data.clients, data.projects);
+                    self.showInfosFromToggl();
+                }
                 self.saveAPIKey();
             },
             error: function (data) {
@@ -66,6 +68,45 @@ var TogglButtonForm = (function () {
         });
     };
     ;
+    TogglButtonForm.prototype.showCurrentTimer = function (currentTimer) {
+        $('#startTimer').hide();
+        $('#stopTimer').show();
+        $('#activeActivityTitle').text(currentTimer.description);
+        $('#activeActivityStartTime').text(new Date(currentTimer.start).toLocaleString())
+            .attr('data-timeentryid', currentTimer.id);
+    };
+    ;
+    TogglButtonForm.prototype.stopCurrentTimer = function () {
+        var self = this;
+        $.ajax({
+            url: './togglButtonForm/stopTimer',
+            method: 'PUT',
+            data: { timeEntryId: $('#activeActivityStartTime').data('timeentryid'), apikey: $('#txtAPIKey').val() },
+            success: function (data) {
+                self.initializeForm();
+            },
+            error: function (data) {
+                self.errorMessage(data.status, data.statusText);
+            }
+        });
+    };
+    ;
+    TogglButtonForm.prototype.discardCurrentTimer = function () {
+        if (!confirm('Do you want to delete this running time entry?'))
+            return;
+        var self = this;
+        $.ajax({
+            url: './togglButtonForm/discardTimer',
+            method: 'DELETE',
+            data: { timeEntryId: $('#activeActivityStartTime').data('timeentryid'), apikey: $('#txtAPIKey').val() },
+            success: function (data) {
+                self.initializeForm();
+            },
+            error: function (data) {
+                self.errorMessage(data.status, data.statusText);
+            }
+        });
+    };
     TogglButtonForm.prototype.saveAPIKey = function () {
         var apiKey = $('#txtAPIKey').val();
         if (localStorage !== undefined) {

@@ -40,3 +40,27 @@ option {
 .error {
     color: red;
 }
+
+.btn {
+    margin-right: 4px;
+}
+
+#startTimer {
+    position:absolute;
+    height: 100%;
+    width: 100%;
+    display: none;
+}
+
+#stopTimer {
+    position: absolute;  
+    height: 100%;  
+    display: none;
+}
+
+.stopDiv {
+    height: 100%;
+    width: 100%;
+    top: 50%;
+    bottom: 50%;
+}

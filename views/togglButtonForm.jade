@@ -29,36 +29,45 @@ block scriptsBody
 				VSS.notifyLoadSucceeded();
 			});
 block content
-	#activityTitle.section
-		div(class='labelTitle') 
-			p Description
-		div
-			input(type='text' id='txtDescription' class='textBox')
-	
-	#project.section
-		div(class='labelTitle')
-			p Project
-		div
-			select(id='projectSelect' class='dropdownList')
-				option(value='')
+	#startTimer.section
+		#activityTitle.section
+			div(class='labelTitle') 
+				p Description
+			div
+				input(type='text' id='txtDescription' class='textBox')
+		
+		#project.section
+			div(class='labelTitle')
+				p Project
+			div
+				select(id='projectSelect' class='dropdownList')
+					option(value='')
+					
+		#tags.section
+			div(class='labelTitle')
+				p Tags
+			div
+				select(id='tagsSelect' class='dropdown chosen-select' multiple data-placeholder="Choose a tag...")
+					option(value='')
 				
-	#tags.section
-		div(class='labelTitle')
-			p Tags
-		div
-			select(id='tagsSelect' class='dropdown chosen-select' multiple data-placeholder="Choose a tag...")
-				option(value='')
-			
-	#apiKey.section
-		div(class='labelTitle')
-			p Toggl API Key
-		div
-			input(type='password' class='textBox' id='txtAPIKey' placeholder='Toggl API Key' value='')  			
-			
-	#btnRefresh.buttonDiv
-		span
-			button(class='refreshButton' id='btnRefresh') Refresh
-			
-	#error.section
-		span.error
+		#apiKey.section
+			div(class='labelTitle')
+				p Toggl API Key
+			div
+				input(type='password' class='textBox' id='txtAPIKey' placeholder='Toggl API Key' value='')  			
+				
+		#btnRefresh.buttonDiv
+			span
+				button(class='btn' id='btnRefresh') Refresh
+				
+		#error.section
+			span.error
+	#stopTimer.section
+		div(class='stopDiv')
+			p Active Timer: 
+				label#activeActivityTitle
+			p running since: 
+				label#activeActivityStartTime
+			button(class='btn' id='btnStop') Stop Timer
+			button(class='btn' id='btnDiscard') Discard
 			

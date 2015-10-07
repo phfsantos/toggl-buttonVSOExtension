@@ -35,6 +35,61 @@ router.get('/getUserData', function (req, res, next) {
     }).end();
 });
 
+router.put('/stopTimer', function(req, res, next){
+    var https = require('https');
+    var util = require('util');
+    console.log('/api/v8/time_entries/' + req.body.timeEntryId + '/stop');
+    console.log(util.inspect(req.body));
+    var options = {
+        host: 'toggl.com',
+        path: '/api/v8/time_entries/' + req.body.timeEntryId + '/stop',
+        headers: { 'Authorization': 'Basic ' + new Buffer(req.body.apikey + ':api_token').toString('base64'),
+                   'Content-Type': 'application/json' },
+        method: 'PUT'
+    };
+    
+    var togglReq = https.request(options, function(response){
+        var str = '';
+        
+        response.on('data', function(chunk){ 
+            str += chunk;
+        });
+        
+        response.on('end', function(){
+            res.sendStatus(this.statusCode);
+        }); 
+    });
+    
+    togglReq.end();    
+});
+
+router.delete('/discardTimer', function(req, res, next){
+    var https = require('https');
+    
+    var options = {
+        host: 'toggl.com',
+        path: '/api/v8/time_entries/' + req.body.timeEntryId,
+        headers: { 'Authorization': 'Basic ' + new Buffer(req.body.apikey + ':api_token').toString('base64'),
+                   'Content-Type': 'application/json' },
+        method: 'DELETE'
+    };
+    
+    var togglReq = https.request(options, function(response){
+        var str = '';
+        
+        response.on('data', function(chunk){ 
+            str += chunk;
+        });
+
+        response.on('end', function(){
+            console.log('end');
+            res.sendStatus(this.statusCode);
+        }); 
+    });
+    
+    togglReq.end();    
+});
+
 
 
 router.post('/startTimer', function (req, res, next) {
@@ -49,8 +104,8 @@ router.post('/startTimer', function (req, res, next) {
     
     var https = require('https');
     
-    var util = require('util');
-    console.log(util.inspect(req.body));
+    // var util = require('util');
+    // console.log(util.inspect(req.body));
 
     var timeEntry = JSON.stringify({
         "time_entry": {
@@ -60,7 +115,7 @@ router.post('/startTimer', function (req, res, next) {
             "created_with": "Visual Studio Online"
         }});
         
-   console.log('The request for timer: ' + util.inspect(timeEntry));
+   // console.log('The request for timer: ' + util.inspect(timeEntry));
     
     var options = {
         host: 'toggl.com',
@@ -74,15 +129,15 @@ router.post('/startTimer', function (req, res, next) {
 
     var togglReq = https.request(options, function(response){
         var str = '';
-        console.log('inside callback');
+        // console.log('inside callback');
         
         response.on('data', function(chunk){ 
             str += chunk;
-            console.log('data: ' + str);
+            // console.log('data: ' + str);
         });
         
         response.on('end', function(){
-           console.log('End Request: ' + this.statusCode + ' - ' + this.statusMessage);
+           // console.log('End Request: ' + this.statusCode + ' - ' + this.statusMessage);
            res.sendStatus(this.statusCode);
         });
     });
