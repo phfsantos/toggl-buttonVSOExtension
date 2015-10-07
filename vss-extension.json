@@ -1,0 +1,40 @@
+{
+  "version": "1.0.0",
+  "name": "Toggl-Button",
+  "id": "almrangers-vsoextensions-Toggl-Button",
+  "description": "VSO Extension to integrate with toggl.com app",
+  "provider": { "name": "Gerson Dias" },
+  "baseUri": "https://localhost:43000",  
+  "categories": [ "Productivity" ],
+  "icons": {
+    "default": "/public/images/apple-touch-icon-72x72.png"
+  },
+  "publisher": "GersonDias",
+  "contributions": [
+    {
+      "id": "TogglButton",
+      "type": "ms.vss-web.action",
+      "description": "Track time for this workitem",
+      "targets": [
+        "ms.vss-work-web.work-item-toolbar-menu"
+      ],
+      "properties": {
+        "text": "",
+        "title": "TogglButton",
+        "toolbarText": "Start Time",
+        "icon": "images/inactive-16.png",
+        "group": "actions",
+        "uri": "TogglButton",
+        "registeredObjectId": "TogglButton"
+      }
+    },
+    {
+      "id": "TogglButtonForm",
+      "targets": [ ".controls" ],
+      "type": "ms.vss-web.control",
+      "properties": {
+        "uri":  "TogglButtonForm"
+      }
+    }
+  ]
+}

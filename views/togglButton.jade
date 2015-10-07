@@ -1,0 +1,11 @@
+extends layout
+
+block styles
+  link(rel='stylesheet', href='/stylesheets/style.css')
+block scriptsHead
+  script(src='/javascripts/sdk/scripts/VSS.SDK.js')
+  script(src='/javascripts/vsotogglbutton.js')
+  
+block content
+  h1 #{title} olá
+  p Welcome to #{title}
