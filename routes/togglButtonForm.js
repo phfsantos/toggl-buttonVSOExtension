@@ -25,8 +25,6 @@ router.get('/getUserData', function (req, res, next) {
             console.log('status: ' + this.statusCode + ' - ' + this.statusMessage);
             //console.log(str);
             if (this.statusCode === 200) {
-                var util = require('util');
-				console.log('Toggl Return ' + util.inspect(str));
 				res.send(JSON.parse(str).data);
             }
             else
@@ -37,9 +35,7 @@ router.get('/getUserData', function (req, res, next) {
 
 router.put('/stopTimer', function(req, res, next){
     var https = require('https');
-    var util = require('util');
-    console.log('/api/v8/time_entries/' + req.body.timeEntryId + '/stop');
-    console.log(util.inspect(req.body));
+
     var options = {
         host: 'toggl.com',
         path: '/api/v8/time_entries/' + req.body.timeEntryId + '/stop',
@@ -103,9 +99,6 @@ router.post('/startTimer', function (req, res, next) {
     }
     
     var https = require('https');
-    
-    // var util = require('util');
-    // console.log(util.inspect(req.body));
 
     var timeEntry = JSON.stringify({
         "time_entry": {
@@ -114,8 +107,6 @@ router.post('/startTimer', function (req, res, next) {
             "pid": req.body.project,
             "created_with": "Visual Studio Online"
         }});
-        
-   // console.log('The request for timer: ' + util.inspect(timeEntry));
     
     var options = {
         host: 'toggl.com',
