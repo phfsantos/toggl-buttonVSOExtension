@@ -12,7 +12,6 @@ var fs = require('fs');
 
 /**
  * SSL Settings
- */
 var sslOptions = {
   key: fs.readFileSync('./localCert/server.key'),
   cert: fs.readFileSync('./localCert/server.crt'),
@@ -21,6 +20,7 @@ var sslOptions = {
   rejectUnauthorized: false
 };
 
+ */
 /**
  * Get port from environment and store in Express.
  */
