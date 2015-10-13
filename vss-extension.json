@@ -1,5 +1,6 @@
 {
-  "version": "1.0.1",
+  "manifestVersion": 1,
+  "version": "1.0.0",
   "name": "Toggl-Button",
   "id": "almrangers-vsoextensions-Toggl-Button",
   "description": "VSO Extension to integrate with toggl.com app",
@@ -10,6 +11,11 @@
     "default": "/public/images/apple-touch-icon-72x72.png"
   },
   "publisher": "GersonDias",
+  "scopes": [
+  	  "vso.profile",
+  	  "vso.work",
+  	  "vso.work_write"
+  	  ],
   "contributions": [
     {
       "id": "TogglButton",
