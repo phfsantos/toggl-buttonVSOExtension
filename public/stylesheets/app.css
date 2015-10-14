@@ -58,6 +58,10 @@ option {
     display: none;
 }
 
+#changeWIState{
+    display: none;
+}
+
 .stopDiv {
     height: 100%;
     width: 100%;

@@ -59,6 +59,15 @@ class TogglButtonDialogLauncher {
                                                         'path': '/fields/System.History',
                                                         'value': 'Toggl.com timer started'
                                                     }];
+                                                    
+                                                    if (result.nextState){
+                                                        postData = postData.concat([{
+                                                            'op': 'add',
+                                                            'path': '/fields/System.State',
+                                                            'value': result.nextState
+                                                        }]);
+                                                    }
+                                                    
                                                     var apiURI = webContext.collection.uri + "_apis/wit/workitems/" + workItem.id + "?api-version=1.0";
                                                     
                                                     $.ajax({

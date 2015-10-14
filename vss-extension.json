@@ -28,7 +28,7 @@
         "text": "Track your time",
         "title": "TogglButton",
         "toolbarText": "Start Time",
-        "icon": "images/inactive-16.png",
+        "icon": "images/active-16.png",
         "group": "actions",
         "uri": "TogglButton",
         "registeredObjectId": "TogglButton"

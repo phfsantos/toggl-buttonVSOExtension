@@ -3,6 +3,8 @@
 /// <reference path='ref/chosen.d.ts' />
 var TogglButtonForm = (function () {
     function TogglButtonForm(workItem) {
+        this.STATE_FIELD = "System.State";
+        this.REASON_FIELD = "System.Reason";
         this.webContext = VSS.getWebContext();
         this.workItem = VSS.getConfiguration().workItem;
         this.togglApiTokenKey = this.webContext.user.uniqueName + "_togglAPIKey";
@@ -20,6 +22,7 @@ var TogglButtonForm = (function () {
             self.discardCurrentTimer();
         });
         $('#txtDescription').val(this.workItem.fields["System.Title"] + " (id: " + this.workItem.id + ")");
+        this.setNextState();
         this.loadAPIKey();
         $('#txtAPIKey').on('change', function () {
             self.hideInfosFromToggl();
@@ -30,6 +33,48 @@ var TogglButtonForm = (function () {
             this.hideInfosFromToggl();
     };
     ;
+    TogglButtonForm.prototype.setNextState = function () {
+        var nextState = "";
+        var currentState = this.workItem.fields[this.STATE_FIELD];
+        switch (this.workItem.fields["System.WorkItemType"]) {
+            case 'Product Backlog Item':
+                if (currentState === "Approved") {
+                    nextState = "Committed";
+                }
+                break;
+            case 'User Story':
+            case 'Requirement':
+                if (currentState === "New") {
+                    nextState = "Active";
+                }
+                break;
+            case 'Bug':
+                if (currentState === "New") {
+                    var reason = this.workItem.fields[this.REASON_FIELD];
+                    if (reason === "New" || reason === "Investigation Complete")
+                        nextState = "Active";
+                }
+                else if (currentState === "Proposed") {
+                    nextState = "Active";
+                }
+                else if (currentState === "Approved") {
+                    nextState = "Committed";
+                }
+                break;
+            case 'Task':
+                if (currentState === "To Do") {
+                    nextState = "In Progress";
+                }
+                else if (currentState === "New" || currentState === "Proposed") {
+                    nextState = "Active";
+                }
+                break;
+        }
+        if (nextState) {
+            $('#nextState').html(nextState);
+            $('#changeWIState').show();
+        }
+    };
     TogglButtonForm.prototype.hideInfosFromToggl = function () {
         $('#startTimer').show();
         $('#project').hide();
@@ -188,7 +233,8 @@ var TogglButtonForm = (function () {
             activityDescription: $('#txtDescription').val(),
             project: $('#projectSelect').val(),
             tags: tags,
-            apikey: $('#txtAPIKey').val()
+            apikey: $('#txtAPIKey').val(),
+            nextState: $('#chkChangeState').prop('checked') == false ? "" : $('#nextState').html()
         };
     };
     ;
@@ -250,6 +296,13 @@ var TogglButtonDialogLauncher = (function () {
                                                 'path': '/fields/System.History',
                                                 'value': 'Toggl.com timer started'
                                             }];
+                                        if (result.nextState) {
+                                            postData = postData.concat([{
+                                                    'op': 'add',
+                                                    'path': '/fields/System.State',
+                                                    'value': result.nextState
+                                                }]);
+                                        }
                                         var apiURI = webContext.collection.uri + "_apis/wit/workitems/" + workItem.id + "?api-version=1.0";
                                         $.ajax({
                                             type: 'PATCH',

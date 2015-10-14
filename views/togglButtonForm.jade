@@ -60,6 +60,12 @@ block content
 			span
 				button(class='btn' id='btnRefresh') Refresh
 				
+		#changeWIState.section
+			label
+				input(type='checkbox' id='chkChangeState')
+				= "Change Work Item to "
+				span#nextState nextState 
+				
 		#error.section
 			span.error
 	#stopTimer.section
