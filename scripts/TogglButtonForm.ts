@@ -51,16 +51,16 @@ class TogglButtonForm {
 
         $('#txtDescription').val(this.workItem.fields["System.Title"] + " (id: " + this.workItem.id + ")");
 
-        this.setNextState();
-
         this.loadAPIKey();
 
         $('#txtAPIKey').on('change', function() {
             self.hideInfosFromToggl();
         });
 
-        if ($('#txtAPIKey').val())
+        if ($('#txtAPIKey').val()) {
             this.fetchTogglInformations();
+            this.setNextState();
+        }
         else
             this.hideInfosFromToggl();
     };
@@ -86,13 +86,11 @@ class TogglButtonForm {
                     if (reason === "New" || reason === "Investigation Complete")//Agile
                         nextState = "Active";
                 }
-                else if (currentState === "Proposed")
-                { 
-                    nextState = "Active"; 
+                else if (currentState === "Proposed") { 
+                    nextState = "Active";
                 }
-                else if (currentState === "Approved")
-                { 
-                    nextState = "Committed"; 
+                else if (currentState === "Approved")  
+                    nextState = "Committed";
                 }
                 break;
             case 'Task':
@@ -114,6 +112,7 @@ class TogglButtonForm {
         $('#startTimer').show();
         $('#project').hide();
         $('#tags').hide();
+        $('#changeWIState').hide();
         $('#btnRefresh').show();
     }
 
@@ -288,7 +287,7 @@ class TogglButtonForm {
             project: $('#projectSelect').val(),
             tags: tags,
             apikey: $('#txtAPIKey').val(),
-            nextState: $('#chkChangeState').prop('checked') == false ? "" : $('#nextState').html() 
+            nextState: $('#chkChangeState').prop('checked') == false ? "" : $('#nextState').html()
         };
     };
 
