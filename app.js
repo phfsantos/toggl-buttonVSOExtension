@@ -1,3 +1,14 @@
+ //---------------------------------------------------------------------
+ // <copyright file="app.js">
+ //    This code is licensed under the MIT License.
+ //    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 
+ //    ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+ //    TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+ //    PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ // </copyright>
+ // <summary>The initial configuration for app</summary>
+ //---------------------------------------------------------------------
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -6,7 +17,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
 var toggl = require('./routes/togglButtonForm')
 
 var app = express();
@@ -24,7 +34,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
 app.use('/togglButtonForm', toggl)
 
 // catch 404 and forward to error handler

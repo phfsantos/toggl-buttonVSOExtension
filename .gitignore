@@ -29,3 +29,6 @@ node_modules
 
 #vsix files
 *.vsix
+
+#settings.vset.json -> Publish settings for Visual Studio
+settings.vset.json
