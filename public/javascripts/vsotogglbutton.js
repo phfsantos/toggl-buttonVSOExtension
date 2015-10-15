@@ -22,13 +22,13 @@ var TogglButtonForm = (function () {
             self.discardCurrentTimer();
         });
         $('#txtDescription').val(this.workItem.fields["System.Title"] + " (id: " + this.workItem.id + ")");
-        this.setNextState();
         this.loadAPIKey();
         $('#txtAPIKey').on('change', function () {
             self.hideInfosFromToggl();
         });
-        if ($('#txtAPIKey').val())
+        if ($('#txtAPIKey').val()) {
             this.fetchTogglInformations();
+        }
         else
             this.hideInfosFromToggl();
     };
@@ -79,6 +79,7 @@ var TogglButtonForm = (function () {
         $('#startTimer').show();
         $('#project').hide();
         $('#tags').hide();
+        $('#changeWIState').hide();
         $('#btnRefresh').show();
     };
     TogglButtonForm.prototype.showInfosFromToggl = function () {
@@ -88,6 +89,7 @@ var TogglButtonForm = (function () {
         $('#tags').show();
         $('#tagsSelect').chosen();
         $('#btnRefresh').hide();
+        this.setNextState();
     };
     TogglButtonForm.prototype.fetchTogglInformations = function () {
         var self = this;
@@ -244,7 +246,6 @@ var TogglButtonForm = (function () {
     ;
     return TogglButtonForm;
 })();
-//$(document).ready(function () { var togglButtonForm = new TogglButtonForm() });
 /// <reference path='ref/jquery.d.ts' />
 /// <reference path='ref/VSS.d.ts' />
 /// <reference path='TogglButtonForm.ts' />

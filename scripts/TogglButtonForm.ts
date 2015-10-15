@@ -59,11 +59,11 @@ class TogglButtonForm {
 
         if ($('#txtAPIKey').val()) {
             this.fetchTogglInformations();
-            this.setNextState();
         }
         else
             this.hideInfosFromToggl();
     };
+
 
     setNextState() {
         var nextState = "";
@@ -89,7 +89,7 @@ class TogglButtonForm {
                 else if (currentState === "Proposed") { 
                     nextState = "Active";
                 }
-                else if (currentState === "Approved")  
+                else if (currentState === "Approved") { 
                     nextState = "Committed";
                 }
                 break;
@@ -123,6 +123,8 @@ class TogglButtonForm {
         $('#tags').show();
         $('#tagsSelect').chosen();
         $('#btnRefresh').hide();
+        
+        this.setNextState();
     }
 
     fetchTogglInformations() {
@@ -296,5 +298,3 @@ class TogglButtonForm {
 
     };
 }
-
-//$(document).ready(function () { var togglButtonForm = new TogglButtonForm() });
