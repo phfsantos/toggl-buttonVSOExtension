@@ -17,11 +17,15 @@ class TogglButtonDialogLauncher {
     constructor(public actionContext: any) {
 
     }
+    
+    changeText() {
+        $('li[command="TogglButton"]').find('.text').html('teste');
+    }
 
     launchDialog() {
         var context = this.actionContext;
         var self = this;
-
+        
         VSS.require(["VSS/Service",
             "TFS/WorkItemTracking/RestClient",
             "TFS/WorkItemTracking/Contracts",
@@ -88,6 +92,7 @@ class TogglButtonDialogLauncher {
                                                         data: JSON.stringify(postData),
                                                         success: function(data){
                                                             if (console) console.log('History updated successful');
+                                                            self.changeText();
                                                         },
                                                         error: function(error){
                                                             if (console) console.log('Error ' + error.status + ': ' + error.statusText);                                                            

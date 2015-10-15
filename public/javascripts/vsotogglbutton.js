@@ -273,6 +273,9 @@ var TogglButtonDialogLauncher = (function () {
     function TogglButtonDialogLauncher(actionContext) {
         this.actionContext = actionContext;
     }
+    TogglButtonDialogLauncher.prototype.changeText = function () {
+        $('li[command="TogglButton"]').find('.text').html('teste');
+    };
     TogglButtonDialogLauncher.prototype.launchDialog = function () {
         var context = this.actionContext;
         var self = this;
@@ -333,6 +336,7 @@ var TogglButtonDialogLauncher = (function () {
                                             success: function (data) {
                                                 if (console)
                                                     console.log('History updated successful');
+                                                self.changeText();
                                             },
                                             error: function (error) {
                                                 if (console)
