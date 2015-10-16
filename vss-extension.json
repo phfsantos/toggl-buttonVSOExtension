@@ -8,7 +8,7 @@
   "baseUri": "https://vso-toggl.azurewebsites.net",
   "categories": [ "Productivity" ],
   "icons": {
-    "default": "/public/images/toggl_short.png",
+    "default": "/public/images/apple-touch-icon-72x72.png",
     "wide": "/public/images/toggl_wide.png"
   },
   "publisher": "GersonDias",
