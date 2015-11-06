@@ -67,10 +67,5 @@
         "uri":  "TogglButtonForm"
       }
     }
-  ],
-  "content": {
-     "license": {
-     		"path": "license.txt"
-     }
-  }
+  ]
 }
