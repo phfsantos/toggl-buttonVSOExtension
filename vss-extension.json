@@ -3,9 +3,9 @@
   "version": "1.1",
   "name": "Toggl-Button",
   "id": "almrangers-vsoextensions-Toggl-Button",
-  
-  "description": "Extension for integration between VSO and toggl.com webapp",
+  "description": "Extension for integration between VSO and toggl.com",
   "provider": { "name": "Gerson Dias" },
+  "publisher": "GersonDias",
   "baseUri": "https://vso-toggl.azurewebsites.net",
   "categories": [ "Plan and track" ],
   "icons": {
@@ -19,25 +19,23 @@
   ],
   "screenshots": [
   		{"path": "screenshots/screen1.png"},
-  		{"path": "screenshots/screen2.png"}
-  		{"path": "screenshots/screen3.png"}
+  		{"path": "screenshots/screen2.png"},
+  		{"path": "screenshots/screen3.png"},
   		{"path": "screenshots/screen4.png"}
   ],
   "content": {
      "license": {
      		"path": "license.txt"
+     },
+     "details": {
+     		"path": "overview.md"
      }
   },
   "links": {
-  		"home": "aka.ms/vsoext12",
-  		"repository": "https://github.com/GersonDias/toggl-buttonVSOExtension",
-  		"issues": "https://github.com/GersonDias/toggl-buttonVSOExtension/issues"
+  		"home": {"uri": "aka.ms/vsoext12"},
+  		"repository": {"uri": "https://github.com/GersonDias/toggl-buttonVSOExtension"},
+  		"issues": {"uri": "https://github.com/GersonDias/toggl-buttonVSOExtension/issues"}
   },
-  "brand": {
-		"color": "red",
-		"theme": "dark"
-  }
-  "publisher": "GersonDias",
   "scopes": [
   	  "vso.profile",
   	  "vso.work",
@@ -69,6 +67,5 @@
         "uri":  "TogglButtonForm"
       }
     }
-  ],
-
+  ]
 }
