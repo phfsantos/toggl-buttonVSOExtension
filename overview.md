@@ -12,3 +12,7 @@ Do you have a good way to track the time you spend in an activity? How to summar
 1. Choose a Client/Project and tags for your activity;
 1. Click in "Start" and begin your work;
 1. You can see the running timer at [toggl.com](http://toggl.com/app)
+
+## Github
+[toggl-buttonVSOExtension repository](http://github.com/gersondias/toggl-buttonVSOExtension)
+[Issues](http://github.com/gersondias/toggl-buttonVSOExtension/issues)
