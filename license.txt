@@ -2,7 +2,7 @@ TogglButton-VSO-Extension
 
 The MIT License (MIT)
 
-Copyright (c) 2015 Microsoft Corporation
+Copyright (c) 2015 Gerson Dias
 
 All rights reserved.
 
