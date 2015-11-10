@@ -7,10 +7,10 @@
   "provider": { "name": "Gerson Dias" },
   "publisher": "GersonDias",
   "baseUri": "https://vso-toggl.azurewebsites.net",
+  "public": true,
   "categories": [ "Plan and track" ],
   "icons": {
-    "default": "/public/images/apple-touch-icon-72x72.png",
-    "wide": "/public/images/toggl_wide.png"
+    "default": "/public/images/toggl_wide.png"
   },
   "tags": [
   	 "working",
@@ -35,6 +35,10 @@
   		"home": {"uri": "aka.ms/vsoext12"},
   		"repository": {"uri": "https://github.com/GersonDias/toggl-buttonVSOExtension"},
   		"issues": {"uri": "https://github.com/GersonDias/toggl-buttonVSOExtension/issues"}
+  },
+  "branding": {
+  		"color": "rgb(220,235,252)",
+  		"theme": "light"
   },
   "scopes": [
   	  "vso.profile",
