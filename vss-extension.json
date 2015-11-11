@@ -34,7 +34,9 @@
   "links": {
   		"home": {"uri": "aka.ms/vsoext12"},
   		"repository": {"uri": "https://github.com/GersonDias/toggl-buttonVSOExtension"},
-  		"issues": {"uri": "https://github.com/GersonDias/toggl-buttonVSOExtension/issues"}
+  		"issues": {"uri": "https://github.com/GersonDias/toggl-buttonVSOExtension/issues"},
+      "support": {"uri": "https://github.com/GersonDias/toggl-buttonVSOExtension/issues"},
+      "learn": {"uri": "aka.ms/vsoext12"}
   },
   "branding": {
   		"color": "rgb(220,235,252)",

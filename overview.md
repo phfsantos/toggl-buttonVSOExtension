@@ -3,7 +3,7 @@
 Do you have a good way to track the time you spend in an activity? How to summarize the information about how much time you spend in a project and do some great reports to give to your clients or managers?
 [toggl.com](http://toggl.com) is the best way to track your time and focus on what is important. Integrate [toggl.com](http://toggl.com) with Visual Studio Online work items and improve your productivity.
 
-## Step by Step
+## How to use
 1. Signup at [toggl.com](http://toggl.com) website;
 1. Configure your projects and clients in toggl.com website;
 1. Go to [My Profile](https://toggl.com/app/profile) and copy your API token (at bottom of My Profile page);
@@ -13,9 +13,10 @@ Do you have a good way to track the time you spend in an activity? How to summar
 1. Click in "Start" and begin your work;
 1. You can see the running timer at [toggl.com](http://toggl.com/app)
 
-## Github
+## Learn more about this extension
 * Fork it on [GitHub Repository](http://github.com/gersondias/toggl-buttonVSOExtension)
 * Let's discuss [Issues and Improvements](http://github.com/gersondias/toggl-buttonVSOExtension/issues)
+* To learn more about developing an extension for Visual Studio Online, see the [overview of extensions](https://www.visualstudio.com/en-us/integrate/extensions/overview)
 
 ## Licensing
 * License: [here](https://marketplace.visualstudio.com/_apis/public/gallery/publisher/GersonDias/extension/vsoextensions-Toggl-Button/latest/assetbyname/license.txt)
