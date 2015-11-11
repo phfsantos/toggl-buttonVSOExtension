@@ -14,5 +14,10 @@ Do you have a good way to track the time you spend in an activity? How to summar
 1. You can see the running timer at [toggl.com](http://toggl.com/app)
 
 ## Github
-[toggl-buttonVSOExtension repository](http://github.com/gersondias/toggl-buttonVSOExtension)
-[Issues](http://github.com/gersondias/toggl-buttonVSOExtension/issues)
+* Fork it on [GitHub Repository](http://github.com/gersondias/toggl-buttonVSOExtension)
+* Let's discuss [Issues and Improvements](http://github.com/gersondias/toggl-buttonVSOExtension/issues)
+
+## Licensing
+* License: [here](https://marketplace.visualstudio.com/_apis/public/gallery/publisher/GersonDias/extension/vsoextensions-Toggl-Button/latest/assetbyname/license.txt)
+* Third Party components: [here](https://marketplace.visualstudio.com/_apis/public/gallery/publisher/GersonDias/extension/vsoextensions-Toggl-Button/latest/assetbyname/ThirdPartyNotice.txt)
+								  
