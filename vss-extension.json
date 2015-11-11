@@ -3,14 +3,14 @@
   "version": "1.1",
   "name": "Toggl-Button",
   "id": "almrangers-vsoextensions-Toggl-Button",
-  "description": "Extension for integration between VSO and toggl.com",
+  "description": "VSO and toggl.com integration",
   "provider": { "name": "Gerson Dias" },
   "publisher": "GersonDias",
   "baseUri": "https://vso-toggl.azurewebsites.net",
   "public": true,
   "categories": [ "Plan and track" ],
   "icons": {
-    "default": "/public/images/toggl_wide.png"
+    "default": "/public/images/apple-touch-icon-128x128.png"
   },
   "tags": [
   	 "working",
