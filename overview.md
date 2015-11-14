@@ -17,5 +17,5 @@ Do you have a good way to track the time you spend in an activity? How to summar
 * Fork it on [GitHub Repository](http://github.com/gersondias/toggl-buttonVSOExtension)
 * Let's discuss [Issues and Improvements](http://github.com/gersondias/toggl-buttonVSOExtension/issues)
 * To learn more about developing an extension for Visual Studio Online, see the [overview of extensions](https://www.visualstudio.com/en-us/integrate/extensions/overview)
-* Notice for certain third party software included in this extension are provided here: [Third Party Notice.](https://marketplace.visualstudio.com/_apis/public/gallery/publisher/GersonDias/extension/vsoextensions-Toggl-Button/latest/assetbyname/ThirdPartyNotice.txt)
+* Notice for certain third party software included in this extension are provided here: [Third Party Notice.](https://marketplace.visualstudio.com/_apis/public/gallery/publisher/GersonDias/extension/TogglButton/latest/assetbyname/ThirdPartyNotice.txt)
 								  
