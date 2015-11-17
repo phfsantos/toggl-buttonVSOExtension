@@ -10,11 +10,13 @@ Do you have a good way to track the time you spend in an activity? How to summar
 1. Choose a work item to start your work and click in "Track your Time";  
   
 ![TogglButton](images/screen1-small.png)
+
 1. Paste Toggl API Key in the corresponding field and click in "Refresh" (if you will, you need to do this only once per user/browser);
 1. Choose a Client/Project and tags for your activity;
 1. Click in "Start" and begin your work;  
   
 ![Track Your Time](images/screen2-small.png)
+
 1. You can see the running timer at [toggl.com](http://toggl.com/app) or clicking again in "Track your Time" in any WorkItem  
   
 ![TogglButton.com](images/screen4-small.png)  
