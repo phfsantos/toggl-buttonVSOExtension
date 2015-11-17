@@ -8,7 +8,7 @@
   "publisher": "GersonDias",
   "baseUri": "https://vso-toggl.azurewebsites.net",
   "public": true,
-  "categories": [ "Plan and track" ],
+  "categories": [ "Productivity" ],
   "icons": {
     "default": "/public/images/apple-touch-icon-128x128.png"
   },
@@ -16,12 +16,6 @@
   	 "working",
   	 "track",
   	 "time management"
-  ],
-  "screenshots": [
-  		{"path": "screenshots/screen1.png"},
-  		{"path": "screenshots/screen2.png"},
-  		{"path": "screenshots/screen3.png"},
-  		{"path": "screenshots/screen4.png"}
   ],
   "content": {
      "license": {
