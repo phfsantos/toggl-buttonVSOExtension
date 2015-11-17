@@ -61,8 +61,8 @@
     }
   },
   "branding": {
-    "color": "rgb(51,65,133)",
-    "theme": "dark"
+    "color": "rgb(220,235,252)",
+    "theme": "light"
   },
   "scopes": [
     "vso.profile",
@@ -89,9 +89,7 @@
     },
     {
       "id": "TogglButtonForm",
-      "targets"
-       : [ ".contro
-     ls" ],
+      "targets": [ ".controls" ],
       "type": "ms.vss-web.control",
       "properties": {
         "uri": "TogglButtonForm"
