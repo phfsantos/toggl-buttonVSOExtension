@@ -21,20 +21,6 @@
     "track",
     "time management"
   ],
-  "screenshots": [
-    {
-      "path": "screenshots/screen1-small.png"
-    },
-    {
-      "path": "screenshots/screen2-small.png"
-    },
-    {
-      "path": "screenshots/screen3-small.png"
-    },
-    {
-      "path": "screenshots/screen4-small.png"
-    }
-  ],
   "content": {
     "license": {
       "path": "license.txt"
@@ -43,6 +29,12 @@
       "path": "overview.md"
     }
   },
+  "files": [
+    {
+        "path": "images",
+        "addressable": "true" 
+    }
+  ],
   "links": {
     "home": {
       "uri": "aka.ms/vsoext12"
