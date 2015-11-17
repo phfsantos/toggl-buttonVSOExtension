@@ -11,7 +11,7 @@
   "baseUri": "https://vso-toggl.azurewebsites.net",
   "public": true,
   "categories": [
-    "Productivity"
+    "Plan and track"
   ],
   "icons": {
     "default": "/public/images/apple-touch-icon-128x128.png"
