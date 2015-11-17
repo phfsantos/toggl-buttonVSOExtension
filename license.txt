@@ -1,4 +1,4 @@
-TogglButton-VSO-Extension
+TogglButton-VSTS-Extension
 
 The MIT License (MIT)
 

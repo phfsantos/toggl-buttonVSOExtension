@@ -1,7 +1,7 @@
-#Track your time - Toggl Button Extension for VSO
+#Track your time - Toggl Button Extension for VSTS
 
 Do you have a good way to track the time you spend in an activity? How to summarize the information about how much time you spend in a project and do some great reports to give to your clients or managers?
-[toggl.com](http://toggl.com) is the best way to track your time and focus on what is important. Integrate [toggl.com](http://toggl.com) with Visual Studio Online work items and improve your productivity.
+[toggl.com](http://toggl.com) is the best way to track your time and focus on what is important. Integrate [toggl.com](http://toggl.com) with Visual Studio Team Services work items and improve your productivity.
 
 ## Quick steps to get started 
 1. Signup at [toggl.com](http://toggl.com) website;
@@ -25,6 +25,6 @@ Do you have a good way to track the time you spend in an activity? How to summar
 ## Learn more about this extension
 * Fork it on [GitHub Repository](http://github.com/gersondias/toggl-buttonVSOExtension)
 * Let's discuss [Issues and Improvements](http://github.com/gersondias/toggl-buttonVSOExtension/issues)
-* To learn more about developing an extension for Visual Studio Online, see the [overview of extensions](https://www.visualstudio.com/en-us/integrate/extensions/overview)
+* To learn more about developing an extension for Visual Studio Team Services, see the [overview of extensions](https://www.visualstudio.com/en-us/integrate/extensions/overview)
 * Notice for certain third party software included in this extension are provided here: [Third Party Notice.](https://marketplace.visualstudio.com/_apis/public/gallery/publisher/GersonDias/extension/TogglButton/latest/assetbyname/ThirdPartyNotice.txt)
 								  
