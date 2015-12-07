@@ -23,7 +23,7 @@ module.exports = function (grunt) {
                 options: {
                     sourceMap: true,
                     declaration: false,
-                    watch: true
+                    watch: false
                }
             },
         },

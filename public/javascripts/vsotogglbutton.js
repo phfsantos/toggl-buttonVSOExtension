@@ -251,7 +251,9 @@ var TogglButtonForm = (function () {
     };
     ;
     TogglButtonForm.prototype.onFormChanged = function (callback) {
-        this.formChangedCallbacks.push(callback);
+        if (this.formChangedCallbacks) {
+            this.formChangedCallbacks.push(callback);
+        }
     };
     ;
     return TogglButtonForm;
