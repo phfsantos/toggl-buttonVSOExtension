@@ -305,7 +305,9 @@ class TogglButtonForm {
     };
 
     onFormChanged(callback) {
-        this.formChangedCallbacks.push(callback);
+        if (this.formChangedCallbacks) {
+            this.formChangedCallbacks.push(callback);
+        }
 
     };
 }
