@@ -116,7 +116,7 @@ router.post('/startTimer', function (req, res, next) {
             "description": req.body.activityDescription,
             "tags": req.body.tags.split(','),
             "pid": req.body.project,
-            "created_with": "Visual Studio Online"
+            "created_with": "Visual Studio Team Services    "
         }});
     
     var options = {

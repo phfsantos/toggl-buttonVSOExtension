@@ -3,50 +3,64 @@
   "version": "1.1",
   "name": "Toggl Button",
   "id": "TogglButton",
-  "description": "VSO and toggl.com integration",
-  "provider": { "name": "Gerson Dias" },
+  "description": "VSTS and toggl.com integration",
+  "provider": {
+    "name": "Gerson Dias"
+  },
   "publisher": "GersonDias",
   "baseUri": "https://vso-toggl.azurewebsites.net",
   "public": true,
-  "categories": [ "Plan and track" ],
+  "categories": [
+    "Plan and track"
+  ],
   "icons": {
     "default": "/public/images/apple-touch-icon-128x128.png"
   },
   "tags": [
-  	 "working",
-  	 "track",
-  	 "time management"
-  ],
-  "screenshots": [
-  		{"path": "screenshots/screen1.png"},
-  		{"path": "screenshots/screen2.png"},
-  		{"path": "screenshots/screen3.png"},
-  		{"path": "screenshots/screen4.png"}
+    "working",
+    "track",
+    "time management"
   ],
   "content": {
-     "license": {
-     		"path": "license.txt"
-     },
-     "details": {
-     		"path": "overview.md"
-     }
+    "license": {
+      "path": "license.txt"
+    },
+    "details": {
+      "path": "overview.md"
+    }
   },
+  "files": [
+    {
+        "path": "images",
+        "addressable": "true" 
+    }
+  ],
   "links": {
-  		"home": {"uri": "aka.ms/vsoext12"},
-  		"repository": {"uri": "https://github.com/GersonDias/toggl-buttonVSOExtension"},
-  		"issues": {"uri": "https://github.com/GersonDias/toggl-buttonVSOExtension/issues"},
-      "support": {"uri": "https://github.com/GersonDias/toggl-buttonVSOExtension/issues"},
-      "learn": {"uri": "aka.ms/vsoext12"}
+    "home": {
+      "uri": "aka.ms/vsoext12"
+    },
+    "repository": {
+      "uri": "https://github.com/GersonDias/toggl-buttonVSOExtension"
+    },
+    "issues": {
+      "uri": "https://github.com/GersonDias/toggl-buttonVSOExtension/issues"
+    },
+    "support": {
+      "uri": "https://github.com/GersonDias/toggl-buttonVSOExtension/issues"
+    },
+    "learn": {
+      "uri": "aka.ms/vsoext12"
+    }
   },
   "branding": {
-  		"color": "rgb(220,235,252)",
-  		"theme": "light"
+    "color": "rgb(220,235,252)",
+    "theme": "light"
   },
   "scopes": [
-  	  "vso.profile",
-  	  "vso.work",
-  	  "vso.work_write"
-  	  ],
+    "vso.profile",
+    "vso.work",
+    "vso.work_write"
+  ],
   "contributions": [
     {
       "id": "TogglButton",
@@ -70,8 +84,13 @@
       "targets": [ ".controls" ],
       "type": "ms.vss-web.control",
       "properties": {
-        "uri":  "TogglButtonForm"
+        "uri": "TogglButtonForm"
       }
+    }
+  ],
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
     }
   ]
 }
