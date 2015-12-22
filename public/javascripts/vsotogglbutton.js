@@ -108,7 +108,10 @@ var TogglButtonForm = (function () {
             data: { apikey: $('#txtAPIKey').val() },
             success: function (data) {
                 self.errorMessage(null);
-                var currentTimer = data.time_entries.find(function (t) { return t.duration < 0; });
+                var currentTimer = null;
+                if (data.time_entries) {
+                    currentTimer = data.time_entries.find(function (t) { return t.duration < 0; });
+                }
                 if (currentTimer) {
                     self.showCurrentTimer(currentTimer);
                 }
