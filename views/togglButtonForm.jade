@@ -30,11 +30,10 @@ block scriptsBody
 		VSS.require([
 			"VSS/Service",
 			"VSS/Controls",
-			//"VSS/Controls/Common",
 			"VSS/Controls/Grids",
 			"TFS/WorkItemTracking/Contracts",
 			"TFS/WorkItemTracking/RestClient"],
-			function (Service, Controls, CommonControls, Grids, Contracts, WebApi) {
+			function (Service, Controls, Grids, Contracts, WebApi) {
 				var togglButtonForm = new TogglButtonForm();
 				VSS.register("TogglButtonForm", togglButtonForm);
 				VSS.notifyLoadSucceeded();
