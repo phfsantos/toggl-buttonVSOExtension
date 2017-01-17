@@ -165,6 +165,35 @@ class TogglButtonForm {
             }
         });
     };
+    updateCompletedTime() {
+        $.ajax({
+            url: './togglButtonForm/getUserData',
+            data: { apikey: $('#txtAPIKey').val() },
+            success: (data) => {                
+                let lastTimeEntry = data.time_entries.pop()
+                let hours = lastTimeEntry.duration / 60; // duration is in seconds
+                let completedWork = this.workItem.fields["System.CompletedWork"];
+                completedWork += hours;
+                VSS.require(["TFS/WorkItemTracking/Services"], function (_WorkItemServices) {
+                    // Get the WorkItemFormService.  This service allows you to get/set fields/links on the 'active' work item (the work item
+                    // that currently is displayed in the UI).
+                    function getWorkItemFormService() {
+                        return _WorkItemServices.WorkItemFormService.getService();
+                    }
+
+                    getWorkItemFormService().then(function(service) {            
+                        // Get the current values for a few of the common fields
+                        service.setFieldValue("System.CompletedWork", completedWork).then( (success) => {
+                            
+                        });
+                    });
+                });
+            },
+            error: (data) => {
+                this.errorMessage(data.status, data.statusText);
+            }
+        });
+    };
 
     showCurrentTimer(currentTimer: any) {
         $('#startTimer').hide();
