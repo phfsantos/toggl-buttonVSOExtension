@@ -29,7 +29,7 @@ module.exports = function (grunt) {
         },
         shell: {
             vsetPublish: {
-                command: 'vset publish'
+                command: 'tfx extension publish --manifest-globs vss-extension.json --share-with sadmin@pherasoft.com'
             } 
         }
     });

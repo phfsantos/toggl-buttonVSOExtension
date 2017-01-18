@@ -204,19 +204,19 @@ class TogglButtonForm {
     };
 
     stopCurrentTimer() {
-        var self = this;
-
-        $.ajax({
-            url: './togglButtonForm/stopTimer',
-            method: 'PUT',
+        let settings: JQueryAjaxSettings = {
+            url: "./togglButtonForm/stopTimer",
+            type: "PUT",
             data: { timeEntryId: $('#activeActivityStartTime').data('timeentryid'), apikey: $('#txtAPIKey').val() },
-            success: function(data) {
-                self.initializeForm();
+            success: (data: any, textStatus: string, jqXHR: JQueryXHR) => {
+                this.initializeForm();
+                this.updateCompletedTime();
             },
-            error: function(data) {
-                self.errorMessage(data.status, data.statusText);
+            error: (data) => {
+                this.errorMessage(data.status, data.statusText);
             }
-        });
+        }
+        $.ajax(settings);
     };
 
     discardCurrentTimer() {

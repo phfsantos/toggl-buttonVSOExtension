@@ -5,10 +5,10 @@
   "id": "TogglButton",
   "description": "VSTS and toggl.com integration",
   "provider": {
-    "name": "Gerson Dias"
+    "name": "Pedro Henrique Ferreira dos Santos"
   },
-  "publisher": "GersonDias",
-  "baseUri": "https://vso-toggl.azurewebsites.net",
+  "publisher": "ordepim",
+  "baseUri": "https://vso-toggl-pomo.azurewebsites.net",
   "public": true,
   "categories": [
     "Plan and track"
@@ -19,7 +19,8 @@
   "tags": [
     "working",
     "track",
-    "time management"
+    "time management",
+    "pomodoro"
   ],
   "content": {
     "license": {
