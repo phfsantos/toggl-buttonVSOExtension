@@ -130,6 +130,7 @@ var TogglButtonForm = (function () {
     ;
     TogglButtonForm.prototype.updateCompletedTime = function () {
         var _this = this;
+        console.log("Updating completed time");
         $.ajax({
             url: './togglButtonForm/getUserData',
             data: { apikey: $('#txtAPIKey').val() },
@@ -138,6 +139,7 @@ var TogglButtonForm = (function () {
                 var hours = lastTimeEntry.duration / 60; // duration is in seconds
                 var completedWork = _this.workItem.fields["System.CompletedWork"];
                 completedWork += hours;
+                console.log("got info");
                 VSS.require(["TFS/WorkItemTracking/Services"], function (_WorkItemServices) {
                     // Get the WorkItemFormService.  This service allows you to get/set fields/links on the 'active' work item (the work item
                     // that currently is displayed in the UI).
@@ -147,6 +149,14 @@ var TogglButtonForm = (function () {
                     getWorkItemFormService().then(function (service) {
                         // Get the current values for a few of the common fields
                         service.setFieldValue("System.CompletedWork", completedWork).then(function (success) {
+                            if (success) {
+                                console.log("Updated completed time");
+                            }
+                            else {
+                                console.log("could not update");
+                            }
+                        }, function (err) {
+                            console.log("could not update", err);
                         });
                     });
                 });
