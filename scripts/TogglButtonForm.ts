@@ -177,6 +177,9 @@ class TogglButtonForm {
                 completedWork += hours;
                 this.workItem.fields["System.CompletedWork"] = completedWork;
                 console.log("got info", completedWork);
+                console.log("got lastTimeEntry", lastTimeEntry);
+                console.log("got fileds", this.workItem.fields);
+                console.log("got CompletedWork", this.workItem.fields["System.CompletedWork"]);
                 VSS.init({
                     explicitNotifyLoaded: true,
                     usePlatformScripts: true
