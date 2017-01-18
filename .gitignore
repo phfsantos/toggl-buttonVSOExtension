@@ -31,4 +31,4 @@ node_modules
 *.vsix
 
 #settings.vset.json -> Publish settings for Visual Studio
-settings.vset.json
+accessToken.json
