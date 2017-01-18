@@ -173,13 +173,12 @@ class TogglButtonForm {
             success: (data) => {                
                 let lastTimeEntry = data.time_entries.pop()
                 let hours = lastTimeEntry.duration / 60; // duration is in seconds
-                let completedWork = this.workItem.fields["System.CompletedWork"];
+                let completedWork = this.workItem.fields["Microsoft.VSTS.Scheduling.CompletedWork"];
                 completedWork += hours;
-                this.workItem.fields["System.CompletedWork"] = completedWork;
                 console.log("got info", completedWork);
                 console.log("got lastTimeEntry", lastTimeEntry);
                 console.log("got fileds", this.workItem.fields);
-                console.log("got CompletedWork", this.workItem.fields["System.CompletedWork"]);
+                console.log("got CompletedWork", this.workItem.fields["Microsoft.VSTS.Scheduling.CompletedWork"]);
                 VSS.init({
                     explicitNotifyLoaded: true,
                     usePlatformScripts: true
@@ -193,7 +192,7 @@ class TogglButtonForm {
 
                     getWorkItemFormService().then(function(service) {            
                         // Get the current values for a few of the common fields
-                        service.setFieldValue("System.CompletedWork", completedWork).then( (success) => {
+                        service.setFieldValue("Microsoft.VSTS.Scheduling.CompletedWork", completedWork).then( (success) => {
                             if (success) {
                                 console.log("Updated completed time");
                             }else{
