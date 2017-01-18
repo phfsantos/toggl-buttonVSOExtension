@@ -39,6 +39,9 @@ class TogglButtonForm {
     REASON_FIELD: string = "System.Reason";
 
     constructor(workItem: any) {
+        console.log("webContext", VSS.getWebContext());
+        console.log("Configuration", VSS.getConfiguration());
+        console.log("workItem", VSS.getConfiguration().workItem);
         this.webContext = VSS.getWebContext();
         this.workItem = VSS.getConfiguration().workItem;
         this.togglApiTokenKey = this.webContext.user.uniqueName + "_togglAPIKey";

@@ -15,6 +15,9 @@ var TogglButtonForm = (function () {
     function TogglButtonForm(workItem) {
         this.STATE_FIELD = "System.State";
         this.REASON_FIELD = "System.Reason";
+        console.log("webContext", VSS.getWebContext());
+        console.log("Configuration", VSS.getConfiguration());
+        console.log("workItem", VSS.getConfiguration().workItem);
         this.webContext = VSS.getWebContext();
         this.workItem = VSS.getConfiguration().workItem;
         this.togglApiTokenKey = this.webContext.user.uniqueName + "_togglAPIKey";
