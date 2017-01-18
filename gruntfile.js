@@ -29,11 +29,17 @@ module.exports = function (grunt) {
         },
         shell: {
             vsetPublish: {
-                command: 'tfx extension publish --publisher ordepim --manifest-globs vss-extension.json --share-with pheradev'
+                command: 'tfx extension publish --service-url https://pheradev.visualstudio.com/ --token  --manifest-globs vss-extension.json --share-with pheradev'
+            },
+            vsetShare: {
+                command: 'set TFX_TRACE=1&& tfx extension share --service-url https://pheradev.visualstudio.com/ --token  --vsix ordepim.PSTogglPomoExtension-1.3.vsix --share-with pheradev'
+            },            
+            vsetCreate: {
+                command: 'tfx extension create --service-url https://pheradev.visualstudio.com/ --token  --manifest-globs vss-extension.json'
             } 
         }
     });
-    grunt.registerTask('buildAndPublish', ['typescript:base', 'shell:vsetPublish']);
+    grunt.registerTask('buildAndPublish', ['typescript:base', 'shell:vsetCreate', "shell:vsetShare"]);
     grunt.registerTask('build', ['typescript:base']);
     grunt.registerTask('publish', ['shell:vsetPublish']);
 };
