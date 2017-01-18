@@ -166,18 +166,20 @@ var TogglButtonForm = (function () {
     };
     ;
     TogglButtonForm.prototype.stopCurrentTimer = function () {
-        var self = this;
-        $.ajax({
-            url: './togglButtonForm/stopTimer',
-            method: 'PUT',
+        var _this = this;
+        var settings = {
+            url: "./togglButtonForm/stopTimer",
+            type: "PUT",
             data: { timeEntryId: $('#activeActivityStartTime').data('timeentryid'), apikey: $('#txtAPIKey').val() },
-            success: function (data) {
-                self.initializeForm();
+            success: function (data, textStatus, jqXHR) {
+                _this.initializeForm();
+                _this.updateCompletedTime();
             },
             error: function (data) {
-                self.errorMessage(data.status, data.statusText);
+                _this.errorMessage(data.status, data.statusText);
             }
-        });
+        };
+        $.ajax(settings);
     };
     ;
     TogglButtonForm.prototype.discardCurrentTimer = function () {

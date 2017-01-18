@@ -1,15 +1,14 @@
 {
   "manifestVersion": 1,
-  "version": "1.1",
-  "name": "Toggl Button",
-  "id": "TogglButton",
-  "description": "VSTS and toggl.com integration",
+  "version": "1.2",
+  "name": "Toggl Button + POmodoro",
+  "id": "TogglButtonPomo",
+  "description": "VSTS and toggl.com integration + pomo",
   "provider": {
     "name": "Pedro Henrique Ferreira dos Santos"
   },
   "publisher": "ordepim",
   "baseUri": "https://vso-toggl-pomo.azurewebsites.net",
-  "public": true,
   "categories": [
     "Plan and track"
   ],
