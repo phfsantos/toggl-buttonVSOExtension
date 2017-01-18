@@ -1,12 +1,12 @@
 {
   "manifestVersion": 1,
-  "version": "1.3.1",
-  "name": "Toggl Button + Pomodoro",
-  "id": "PSTogglPomoExtension",
-  "description": "VSTS and toggl.com integration + pomo",
+  "version": "1.3.3",
+  "name": "Toggl Pomodoro Time Trcker",
+  "id": "TogglPomoExtension",
+  "description": "VSTS and toggl.com integration with builtin pomodoro",
   "publisher": "ordepim",
   "baseUri": "https://vso-toggl-pomo.azurewebsites.net",
-  "public": false,
+  "public": true,
   "categories": [
     "Plan and track"
   ],

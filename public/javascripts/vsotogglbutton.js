@@ -136,17 +136,9 @@ var TogglButtonForm = (function () {
             data: { apikey: $('#txtAPIKey').val() },
             success: function (data) {
                 var lastTimeEntry = data.time_entries.pop();
-                var hours = lastTimeEntry.duration / 60; // duration is in seconds
+                var hours = lastTimeEntry.duration / 60 / 60; // duration is in seconds
                 var completedWork = _this.workItem.fields["Microsoft.VSTS.Scheduling.CompletedWork"];
                 completedWork += hours;
-                console.log("got info", completedWork);
-                console.log("got lastTimeEntry", lastTimeEntry);
-                console.log("got fileds", _this.workItem.fields);
-                console.log("got CompletedWork", _this.workItem.fields["Microsoft.VSTS.Scheduling.CompletedWork"]);
-                VSS.init({
-                    explicitNotifyLoaded: true,
-                    usePlatformScripts: true
-                });
                 VSS.require(["TFS/WorkItemTracking/Services"], function (_WorkItemServices) {
                     // Get the WorkItemFormService.  This service allows you to get/set fields/links on the 'active' work item (the work item
                     // that currently is displayed in the UI).
@@ -167,7 +159,6 @@ var TogglButtonForm = (function () {
                         });
                     });
                 });
-                VSS.notifyLoadSucceeded();
             },
             error: function (data) {
                 _this.errorMessage(data.status, data.statusText);
