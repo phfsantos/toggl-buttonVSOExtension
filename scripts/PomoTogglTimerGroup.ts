@@ -33,6 +33,7 @@ interface ITogglOpts {
 }
 
 class PomoTogglTimerGroup {
+    apiKey: string = "";
     formChangedCallbacks: any[];
     workItemForm: any;
     authenticationService: any;
@@ -60,21 +61,21 @@ class PomoTogglTimerGroup {
             self.stopCurrentTimer();
         });
 
+        $('#btnStart').click(function () {
+            self.startTimer();
+        });
+
         $('#btnDiscard').click(function () {
             self.discardCurrentTimer();
         });
 
         this.loadAPIKey();
 
-        $('#txtAPIKey').on('change', function () {
-            self.hideInfosFromToggl();
-        });
-
-        if ($('#txtAPIKey').val()) {
+        if (this.apiKey) {
             this.fetchTogglInformations();
-        }
-        else
+        } else {
             this.hideInfosFromToggl();
+        }
     };
 
     setNextState() {
@@ -152,7 +153,7 @@ class PomoTogglTimerGroup {
         var self = this;
         $.ajax({
             url: './pomoTogglTimer/getUserData',
-            data: { apikey: $('#txtAPIKey').val() },
+            data: { apikey: this.apiKey },
             success: function (data) {
                 self.errorMessage(null);
                 var currentTimer = null;
@@ -179,7 +180,7 @@ class PomoTogglTimerGroup {
         console.log("Updating completed time");
         $.ajax({
             url: './pomoTogglTimer/getUserData',
-            data: { apikey: $('#txtAPIKey').val() },
+            data: { apikey: this.apiKey },
             success: (data) => {
                 const COMPLETED_WORK = "Microsoft.VSTS.Scheduling.CompletedWork";
                 this.workItemForm.getService().then((workItemFormService) => {
@@ -284,7 +285,7 @@ class PomoTogglTimerGroup {
         let settings: JQueryAjaxSettings = {
             url: "./pomoTogglTimer/stopTimer",
             type: "PUT",
-            data: { timeEntryId: $('#activeActivityStartTime').data('timeentryid'), apikey: $('#txtAPIKey').val() },
+            data: { timeEntryId: $('#activeActivityStartTime').data('timeentryid'), apikey: this.apiKey },
             success: (data: any, textStatus: string, jqXHR: JQueryXHR) => {
                 this.initializeForm();
                 this.updateCompletedTime();
@@ -305,7 +306,7 @@ class PomoTogglTimerGroup {
         $.ajax({
             url: './pomoTogglTimer/discardTimer',
             type: 'DELETE',
-            data: { timeEntryId: $('#activeActivityStartTime').data('timeentryid'), apikey: $('#txtAPIKey').val() },
+            data: { timeEntryId: $('#activeActivityStartTime').data('timeentryid'), apikey: this.apiKey },
             success: function (data) {
                 self.initializeForm();
             },
@@ -317,9 +318,7 @@ class PomoTogglTimerGroup {
 
     loadAPIKey() {
         if (localStorage !== undefined) {
-            var apiKey = localStorage.getItem(this.togglApiTokenKey);
-            if (apiKey)
-                $('#txtAPIKey').val(apiKey);
+            this.apiKey = localStorage.getItem(this.togglApiTokenKey);
         }
     }
 
@@ -407,7 +406,7 @@ class PomoTogglTimerGroup {
             activityDescription: $('#txtDescription').val(),
             project: $('#projectSelect').val(),
             tags: tags,
-            apikey: $('#txtAPIKey').val(),
+            apikey: this.apiKey,
             nextState: $('#chkChangeState').prop('checked') == false ? "" : $('#nextState').html()
         };
     };
