@@ -13,7 +13,7 @@
 /// <reference path='ref/VSS.d.ts' />
 /// <reference path='ref/chosen.d.ts' />
 
-let Notification = (<any> window).Notification;
+let Notification = (<any>window).Notification;
 
 interface ITogglFormResponse {
     activityDescription: string;
@@ -85,7 +85,7 @@ class PomoTogglTimerGroup {
             "System.WorkItemType",
         ]).then((fields) => {
             var currentState = fields[this.STATE_FIELD];
-            
+
             switch (fields["System.WorkItemType"]) {
                 case 'Product Backlog Item':
                     if (currentState === "Approved") {
@@ -207,8 +207,17 @@ class PomoTogglTimerGroup {
         $('#startTimer').hide();
         $('#stopTimer').show();
         $('#activeActivityTitle').text(currentTimer.description);
-        $('#activeActivityStartTime').text(new Date(currentTimer.start).toLocaleString())
-            .attr('data-timeentryid', currentTimer.id);
+        let start = new Date(currentTimer.start);
+        let now = new Date();
+        let milliseconds = Math.abs(Number(start) - Number(now));
+        $('#activeActivityStartTime').attr('data-timeentryid', currentTimer.id);
+        setInterval(() => {
+            milliseconds += 1000;
+            let min = (milliseconds/1000/60) << 0;
+            let sec = (milliseconds/1000) % 60;
+
+            $('#activeActivityStartTime').text(`${min}:${sec}`);
+        }, 1000)
     };
 
     startTimer() {
