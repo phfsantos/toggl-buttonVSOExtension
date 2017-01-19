@@ -37,7 +37,7 @@ block scriptsBody
 				return _WorkItemServices.WorkItemFormService.getService();
 			}
 
-			getWorkItemFormService().then(workItemFormService) => {
+			getWorkItemFormService().then((workItemFormService) => {
 				var pomoTogglTimerGroup = new PomoTogglTimerGroup(WorkItemFormService, AuthenticationService);
 				VSS.register("pomoTogglTimerGroup", pomoTogglTimerGroup);
 				VSS.notifyLoadSucceeded();
