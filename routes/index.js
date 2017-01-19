@@ -17,6 +17,9 @@ router.get('/pomoTogglTimerSettings', function(req, res, next) {
   res.render('pomoTogglTimerSettings', { title: 'Express' });
 });
 
+router.get('/', function(req, res, next) {
+  res.render('pomoTogglTimerSettings', { title: 'Express' });
+});
 
 /* GET pomo toggl settings. */
 router.get('/pomoTogglTimerGroup', function (req, res, next) {

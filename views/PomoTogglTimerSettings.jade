@@ -28,11 +28,11 @@ block scriptsBody
 		});
 
 		// Get the data service
-		VSS.getService(VSS.ServiceIds.ExtensionData).then((dataService) => {
-			var pomoTogglTimerSettings = new PomoTogglTimerSettings(dataService);
+		//VSS.getService(VSS.ServiceIds.ExtensionData).then((dataService) => {
+			var pomoTogglTimerSettings = new PomoTogglTimerSettings();
 			VSS.register("PomoTogglTimerSettings", pomoTogglTimerSettings);
 			VSS.notifyLoadSucceeded();
-		});
+		//});
 block content
 	#startTimer.section
 		#apiKey.section
