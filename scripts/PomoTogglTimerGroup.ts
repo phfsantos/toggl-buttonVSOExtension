@@ -13,6 +13,8 @@
 /// <reference path='ref/VSS.d.ts' />
 /// <reference path='ref/chosen.d.ts' />
 
+let Notification = (<any> window).Notification;
+
 interface ITogglFormResponse {
     activityDescription: string;
     project: string;
@@ -75,48 +77,54 @@ class PomoTogglTimerGroup {
             this.hideInfosFromToggl();
     };
 
-
     setNextState() {
         var nextState = "";
-        var currentState = this.workItem.fields[this.STATE_FIELD];
-        switch (this.workItem.fields["System.WorkItemType"]) {
-            case 'Product Backlog Item':
-                if (currentState === "Approved") {
-                    nextState = "Committed"
-                }
-                break;
-            case 'User Story':
-            case 'Requirement':
-                if (currentState === "New") {
-                    nextState = "Active";
-                }
-                break;
-            case 'Bug':
-                if (currentState === "New") {
-                    var reason = this.workItem.fields[this.REASON_FIELD];
-                    if (reason === "New" || reason === "Investigation Complete")//Agile
+        this.workItemFormService.getFieldValues([
+            this.STATE_FIELD,
+            this.REASON_FIELD,
+            "System.WorkItemType",
+        ]).then((fields) => {
+            var currentState = fields[this.STATE_FIELD];
+            
+            switch (fields["System.WorkItemType"]) {
+                case 'Product Backlog Item':
+                    if (currentState === "Approved") {
+                        nextState = "Committed"
+                    }
+                    break;
+                case 'User Story':
+                case 'Requirement':
+                    if (currentState === "New") {
                         nextState = "Active";
-                }
-                else if (currentState === "Proposed") {
-                    nextState = "Active";
-                }
-                else if (currentState === "Approved") {
-                    nextState = "Committed";
-                }
-                break;
-            case 'Task':
-                if (currentState === "To Do") {
-                    nextState = "In Progress";
-                } else if (currentState === "New" || currentState === "Proposed") {
-                    nextState = "Active";
-                }
-                break;
-        }
+                    }
+                    break;
+                case 'Bug':
+                    if (currentState === "New") {
+                        var reason = fields[this.REASON_FIELD];
+                        if (reason === "New" || reason === "Investigation Complete")//Agile
+                            nextState = "Active";
+                    }
+                    else if (currentState === "Proposed") {
+                        nextState = "Active";
+                    }
+                    else if (currentState === "Approved") {
+                        nextState = "Committed";
+                    }
+                    break;
+                case 'Task':
+                    if (currentState === "To Do") {
+                        nextState = "In Progress";
+                    } else if (currentState === "New" || currentState === "Proposed") {
+                        nextState = "Active";
+                    }
+                    break;
+            }
 
-        if (nextState) {
-            $('#nextState').html(nextState);
-            $('#changeWIState').show();
-        }
+            if (nextState) {
+                $('#nextState').html(nextState);
+                $('#changeWIState').show();
+            }
+        })
     }
 
     hideInfosFromToggl() {
@@ -208,13 +216,13 @@ class PomoTogglTimerGroup {
             let result = this.getFormInputs();
             $.ajax({
                 url: './pomoTogglTimer/startTimer',
-                method: 'POST',
+                type: 'POST',
                 data: result,
                 success: (data) => {
                     alert('Timer started successfully');
                     $('li[command="TogglButton"]').find('img').attr('src', 'https://localhost:43000/images/active-16.png')
 
-                    var authTokenManager = AuthenticationService.authTokenManager;
+                    var authTokenManager = this.authenticationService.authTokenManager;
                     authTokenManager.getToken().then(function (token) {
                         var header = authTokenManager.getAuthorizationHeader(token);
                         $.ajaxSetup({ headers: { 'Authorization': header } });
@@ -281,7 +289,7 @@ class PomoTogglTimerGroup {
 
         $.ajax({
             url: './pomoTogglTimer/discardTimer',
-            method: 'DELETE',
+            type: 'DELETE',
             data: { timeEntryId: $('#activeActivityStartTime').data('timeentryid'), apikey: $('#txtAPIKey').val() },
             success: function (data) {
                 self.initializeForm();
