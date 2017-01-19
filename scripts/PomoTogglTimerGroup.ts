@@ -59,8 +59,6 @@ class PomoTogglTimerGroup {
             self.discardCurrentTimer();
         });
 
-        $('#txtDescription').val(this.workItem.fields["System.Title"] + " (id: " + this.workItem.id + ")");
-
         this.loadAPIKey();
 
         $('#txtAPIKey').on('change', function() {
@@ -254,7 +252,7 @@ class PomoTogglTimerGroup {
                                         'value': result.nextState
                                     }]);
                                 }
-                                
+
                                 service.getWorkItemResourceUrl(workItemID).then((apiURI)=>{
                                     //var apiURI = this.webContext.collection.uri + "_apis/wit/workitems/" + workItemID + "?api-version=1.0";
                                     $.ajax({
@@ -331,6 +329,28 @@ class PomoTogglTimerGroup {
 
         if (status != null && status != 200)
             $('#error').html('<p>Error ' + status + ': ' + message + '</p>')
+    }
+
+    fillDescriptionInfo(){
+        VSS.require([
+            "TFS/WorkItemTracking/Services",
+            "VSS/Authentication/Services"
+        ], (_WorkItemServices, AuthenticationService) => {
+            // Get the WorkItemFormService.  This service allows you to get/set fields/links on the 'active' work item (the work item
+            // that currently is displayed in the UI).
+            function getWorkItemFormService() {
+                return _WorkItemServices.WorkItemFormService.getService();
+            }
+
+            getWorkItemFormService().then((service) => {
+                // Get the current values for a few of the common fields
+                service.getID().then((workItemID) => {
+                    service.getFieldValue("System.Title").then((title) => {
+                         $('#txtDescription').val(title + " (id: " + workItemID + ")");
+                    });
+                });
+            });
+        });
     }
 
     fillTagsInfo(tags) {
