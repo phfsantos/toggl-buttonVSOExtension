@@ -172,8 +172,16 @@ var PomoTogglTimerGroup = (function () {
         $('#startTimer').hide();
         $('#stopTimer').show();
         $('#activeActivityTitle').text(currentTimer.description);
-        $('#activeActivityStartTime').text(new Date(currentTimer.start).toLocaleString())
-            .attr('data-timeentryid', currentTimer.id);
+        var start = new Date(currentTimer.start);
+        var now = new Date();
+        var milliseconds = Math.abs(Number(start) - Number(now));
+        $('#activeActivityStartTime').attr('data-timeentryid', currentTimer.id);
+        setInterval(function () {
+            milliseconds += 1000;
+            var min = (milliseconds / 1000 / 60) << 0;
+            var sec = (milliseconds / 1000) % 60;
+            $('#activeActivityStartTime').text(min + ":" + sec);
+        }, 1000);
     };
     ;
     PomoTogglTimerGroup.prototype.startTimer = function () {
