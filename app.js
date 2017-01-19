@@ -17,7 +17,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
-var toggl = require('./routes/togglButtonForm')
+var toggl = require('./routes/pomoTogglTimer')
 
 var app = express();
 
