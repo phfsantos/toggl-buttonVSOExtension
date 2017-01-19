@@ -28,16 +28,16 @@ block scriptsBody
 		});
 
 		VSS.require([
-            "TFS/WorkItemTracking/Services",
-            "VSS/Authentication/Services"
+			"TFS/WorkItemTracking/Services",
+			"VSS/Authentication/Services"
 		], (_WorkItemServices, AuthenticationService) => {
 			// Get the WorkItemFormService.  This service allows you to get/set fields/links on the 'active' work item (the work item
-            // that currently is displayed in the UI).
-            function getWorkItemFormService() {
-                return _WorkItemServices.WorkItemFormService.getService();
-            }
+			// that currently is displayed in the UI).
+			function getWorkItemFormService() {
+				return _WorkItemServices.WorkItemFormService.getService();
+			}
 
-            getWorkItemFormService().then(workItemFormService) => {
+			getWorkItemFormService().then(workItemFormService) => {
 				var pomoTogglTimerGroup = new PomoTogglTimerGroup(WorkItemFormService, AuthenticationService);
 				VSS.register("pomoTogglTimerGroup", pomoTogglTimerGroup);
 				VSS.notifyLoadSucceeded();
@@ -77,9 +77,9 @@ block content
 			span.error
 	#stopTimer.section
 		div(class='stopDiv')
-			p Active Timer: 
+			p Active Timer:
 				label#activeActivityTitle
-			p Timer: 
+			p Timer:
 				label#activeActivityStartTime
 			button(class='btn' id='btnStop') Stop Timer
 			button(class='btn' id='btnDiscard') Discard
