@@ -34,7 +34,7 @@ interface ITogglOpts {
 
 class PomoTogglTimerGroup {
     formChangedCallbacks: any[];
-    workItemFormService: any;
+    workItemForm: any;
     authenticationService: any;
     webContext: any;
     togglApiTokenKey: string;
@@ -43,7 +43,7 @@ class PomoTogglTimerGroup {
 
     constructor(WorkItemFormService, AuthenticationService) {
         this.authenticationService = AuthenticationService;
-        this.workItemFormService = WorkItemFormService;
+        this.workItemForm = WorkItemFormService;
         this.webContext = VSS.getWebContext();
         this.togglApiTokenKey = this.webContext.user.uniqueName + "_togglAPIKey";
         this.initializeForm();
@@ -79,51 +79,53 @@ class PomoTogglTimerGroup {
 
     setNextState() {
         var nextState = "";
-        this.workItemFormService.getFieldValues([
-            this.STATE_FIELD,
-            this.REASON_FIELD,
-            "System.WorkItemType",
-        ]).then((fields) => {
-            var currentState = fields[this.STATE_FIELD];
+        this.workItemForm.getService().then((workItemFormService) => {
+            workItemFormService.getFieldValues([
+                this.STATE_FIELD,
+                this.REASON_FIELD,
+                "System.WorkItemType",
+            ]).then((fields) => {
+                var currentState = fields[this.STATE_FIELD];
 
-            switch (fields["System.WorkItemType"]) {
-                case 'Product Backlog Item':
-                    if (currentState === "Approved") {
-                        nextState = "Committed"
-                    }
-                    break;
-                case 'User Story':
-                case 'Requirement':
-                    if (currentState === "New") {
-                        nextState = "Active";
-                    }
-                    break;
-                case 'Bug':
-                    if (currentState === "New") {
-                        var reason = fields[this.REASON_FIELD];
-                        if (reason === "New" || reason === "Investigation Complete")//Agile
+                switch (fields["System.WorkItemType"]) {
+                    case 'Product Backlog Item':
+                        if (currentState === "Approved") {
+                            nextState = "Committed"
+                        }
+                        break;
+                    case 'User Story':
+                    case 'Requirement':
+                        if (currentState === "New") {
                             nextState = "Active";
-                    }
-                    else if (currentState === "Proposed") {
-                        nextState = "Active";
-                    }
-                    else if (currentState === "Approved") {
-                        nextState = "Committed";
-                    }
-                    break;
-                case 'Task':
-                    if (currentState === "To Do") {
-                        nextState = "In Progress";
-                    } else if (currentState === "New" || currentState === "Proposed") {
-                        nextState = "Active";
-                    }
-                    break;
-            }
+                        }
+                        break;
+                    case 'Bug':
+                        if (currentState === "New") {
+                            var reason = fields[this.REASON_FIELD];
+                            if (reason === "New" || reason === "Investigation Complete")//Agile
+                                nextState = "Active";
+                        }
+                        else if (currentState === "Proposed") {
+                            nextState = "Active";
+                        }
+                        else if (currentState === "Approved") {
+                            nextState = "Committed";
+                        }
+                        break;
+                    case 'Task':
+                        if (currentState === "To Do") {
+                            nextState = "In Progress";
+                        } else if (currentState === "New" || currentState === "Proposed") {
+                            nextState = "Active";
+                        }
+                        break;
+                }
 
-            if (nextState) {
-                $('#nextState').html(nextState);
-                $('#changeWIState').show();
-            }
+                if (nextState) {
+                    $('#nextState').html(nextState);
+                    $('#changeWIState').show();
+                }
+            })
         })
     }
 
@@ -180,21 +182,23 @@ class PomoTogglTimerGroup {
             data: { apikey: $('#txtAPIKey').val() },
             success: (data) => {
                 const COMPLETED_WORK = "Microsoft.VSTS.Scheduling.CompletedWork";
-                this.workItemFormService.getFieldValue(COMPLETED_WORK).then((completedWork) => {
-                    let lastTimeEntry = data.time_entries.pop()
-                    let hours = lastTimeEntry.duration / 60 / 60; // duration is in seconds
-                    completedWork += hours;
-                    this.workItemFormService.setFieldValue(COMPLETED_WORK, completedWork).then((success) => {
-                        if (success) {
-                            console.log("Updated completed time");
-                        } else {
-                            console.log("could not update");
-                        }
+                this.workItemForm.getService().then((workItemFormService) => {
+                    workItemFormService.getFieldValue(COMPLETED_WORK).then((completedWork) => {
+                        let lastTimeEntry = data.time_entries.pop()
+                        let hours = lastTimeEntry.duration / 60 / 60; // duration is in seconds
+                        completedWork += hours;
+                        workItemFormService.setFieldValue(COMPLETED_WORK, completedWork).then((success) => {
+                            if (success) {
+                                console.log("Updated completed time");
+                            } else {
+                                console.log("could not update");
+                            }
+                        }, (err) => {
+                            console.log("could not update", err);
+                        });
                     }, (err) => {
                         console.log("could not update", err);
                     });
-                }, (err) => {
-                    console.log("could not update", err);
                 });
             },
             error: (data) => {
@@ -213,65 +217,67 @@ class PomoTogglTimerGroup {
         $('#activeActivityStartTime').attr('data-timeentryid', currentTimer.id);
         setInterval(() => {
             milliseconds += 1000;
-            let min = (milliseconds/1000/60) << 0;
-            let sec = (milliseconds/1000) % 60;
+            let min = (milliseconds / 1000 / 60) << 0;
+            let sec = (milliseconds / 1000) % 60;
 
             $('#activeActivityStartTime').text(`${min}:${sec}`);
         }, 1000)
     };
 
     startTimer() {
-        this.workItemFormService.getID().then((workItemID) => {
-            let result = this.getFormInputs();
-            $.ajax({
-                url: './pomoTogglTimer/startTimer',
-                type: 'POST',
-                data: result,
-                success: (data) => {
-                    alert('Timer started successfully');
-                    $('li[command="TogglButton"]').find('img').attr('src', 'https://localhost:43000/images/active-16.png')
+        this.workItemForm.getService().then((workItemFormService) => {
+            workItemFormService.getID().then((workItemID) => {
+                let result = this.getFormInputs();
+                $.ajax({
+                    url: './pomoTogglTimer/startTimer',
+                    type: 'POST',
+                    data: result,
+                    success: (data) => {
+                        alert('Timer started successfully');
+                        $('li[command="TogglButton"]').find('img').attr('src', 'https://localhost:43000/images/active-16.png')
 
-                    var authTokenManager = this.authenticationService.authTokenManager;
-                    authTokenManager.getToken().then(function (token) {
-                        var header = authTokenManager.getAuthorizationHeader(token);
-                        $.ajaxSetup({ headers: { 'Authorization': header } });
+                        var authTokenManager = this.authenticationService.authTokenManager;
+                        authTokenManager.getToken().then(function (token) {
+                            var header = authTokenManager.getAuthorizationHeader(token);
+                            $.ajaxSetup({ headers: { 'Authorization': header } });
 
-                        var postData = [{
-                            'op': 'add',
-                            'path': '/fields/System.History',
-                            'value': 'Toggl.com timer started'
-                        }];
-
-                        if (result.nextState) {
-                            postData = postData.concat([{
+                            var postData = [{
                                 'op': 'add',
-                                'path': '/fields/System.State',
-                                'value': result.nextState
-                            }]);
-                        }
+                                'path': '/fields/System.History',
+                                'value': 'Toggl.com timer started'
+                            }];
 
-                        this.workItemFormService.getWorkItemResourceUrl(workItemID).then((apiURI) => {
-                            //var apiURI = this.webContext.collection.uri + "_apis/wit/workitems/" + workItemID + "?api-version=1.0";
-                            $.ajax({
-                                type: 'PATCH',
-                                url: apiURI,
-                                contentType: 'application/json-patch+json',
-                                data: JSON.stringify(postData),
-                                success(data) {
-                                    if (console) console.log('History updated successful');
-                                },
-                                error(error) {
-                                    if (console) console.log('Error ' + error.status + ': ' + error.statusText);
-                                }
+                            if (result.nextState) {
+                                postData = postData.concat([{
+                                    'op': 'add',
+                                    'path': '/fields/System.State',
+                                    'value': result.nextState
+                                }]);
+                            }
+
+                            workItemFormService.getWorkItemResourceUrl(workItemID).then((apiURI) => {
+                                //var apiURI = this.webContext.collection.uri + "_apis/wit/workitems/" + workItemID + "?api-version=1.0";
+                                $.ajax({
+                                    type: 'PATCH',
+                                    url: apiURI,
+                                    contentType: 'application/json-patch+json',
+                                    data: JSON.stringify(postData),
+                                    success(data) {
+                                        if (console) console.log('History updated successful');
+                                    },
+                                    error(error) {
+                                        if (console) console.log('Error ' + error.status + ': ' + error.statusText);
+                                    }
+                                });
                             });
                         });
-                    });
-                },
-                error: (err) => {
-                    alert('Not possible to start the timer. Error ' + err.status + ': ' + err.statusText);
-                }
+                    },
+                    error: (err) => {
+                        alert('Not possible to start the timer. Error ' + err.status + ': ' + err.statusText);
+                    }
+                });
             });
-        });
+        })
     }
 
     stopCurrentTimer() {
@@ -327,9 +333,11 @@ class PomoTogglTimerGroup {
     }
 
     fillDescriptionInfo() {
-        this.workItemFormService.getID().then((workItemID) => {
-            this.workItemFormService.getFieldValue("System.Title").then((title) => {
-                $('#txtDescription').val(title + " (id: " + workItemID + ")");
+        this.workItemForm.getService().then((workItemFormService) => {
+            workItemFormService.getID().then((workItemID) => {
+                workItemFormService.getFieldValue("System.Title").then((title) => {
+                    $('#txtDescription').val(title + " (id: " + workItemID + ")");
+                });
             });
         });
     }

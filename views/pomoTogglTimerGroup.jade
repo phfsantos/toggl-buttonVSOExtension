@@ -34,7 +34,7 @@ block scriptsBody
 			// Get the WorkItemFormService.  This service allows you to get/set fields/links on the 'active' work item (the work item
 			// that currently is displayed in the UI).
 			function getWorkItemFormService() {
-				return _WorkItemServices.WorkItemFormService.getService();
+				return _WorkItemServices.WorkItemFormService;
 			}
 
 			getWorkItemFormService().then((workItemFormService) => {
