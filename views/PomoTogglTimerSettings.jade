@@ -34,8 +34,8 @@ block scriptsBody
 			"TFS/WorkItemTracking/Contracts",
 			"TFS/WorkItemTracking/RestClient"],
 			function (Service, Controls, Grids, Contracts, WebApi) {
-				var togglButtonForm = new PomoTogglTimerSettings();
-				VSS.register("TogglButtonSettings", togglButtonSettings);
+				var pomoTogglTimerSettings = new PomoTogglTimerSettings();
+				VSS.register("PomoTogglTimerSettings", pomoTogglTimerSettings);
 				VSS.notifyLoadSucceeded();
 			});
 block content
