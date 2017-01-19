@@ -28,16 +28,21 @@ block scriptsBody
 		});
 
 		VSS.require([
-			"VSS/Service",
-			"VSS/Controls",
-			"VSS/Controls/Grids",
-			"TFS/WorkItemTracking/Contracts",
-			"TFS/WorkItemTracking/RestClient"],
-			function (Service, Controls, Grids, Contracts, WebApi) {
-				var pomoTogglTimerGroup = new PomoTogglTimerGroup();
+            "TFS/WorkItemTracking/Services",
+            "VSS/Authentication/Services"
+		], (_WorkItemServices, AuthenticationService) => {
+			// Get the WorkItemFormService.  This service allows you to get/set fields/links on the 'active' work item (the work item
+            // that currently is displayed in the UI).
+            function getWorkItemFormService() {
+                return _WorkItemServices.WorkItemFormService.getService();
+            }
+
+            getWorkItemFormService().then(workItemFormService) => {
+				var pomoTogglTimerGroup = new PomoTogglTimerGroup(WorkItemFormService, AuthenticationService);
 				VSS.register("pomoTogglTimerGroup", pomoTogglTimerGroup);
 				VSS.notifyLoadSucceeded();
 			});
+		});
 block content
 	#startTimer.section
 		#activityTitle.section

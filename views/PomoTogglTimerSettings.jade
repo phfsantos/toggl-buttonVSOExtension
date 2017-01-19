@@ -27,17 +27,12 @@ block scriptsBody
 			usePlatformStyles: true
 		});
 
-		VSS.require([
-			"VSS/Service",
-			"VSS/Controls",
-			"VSS/Controls/Grids",
-			"TFS/WorkItemTracking/Contracts",
-			"TFS/WorkItemTracking/RestClient"],
-			function (Service, Controls, Grids, Contracts, WebApi) {
-				var pomoTogglTimerSettings = new PomoTogglTimerSettings();
-				VSS.register("PomoTogglTimerSettings", pomoTogglTimerSettings);
-				VSS.notifyLoadSucceeded();
-			});
+		// Get the data service
+    	VSS.getService(VSS.ServiceIds.ExtensionData).then((dataService) => {
+			var pomoTogglTimerSettings = new PomoTogglTimerSettings(dataService);
+			VSS.register("PomoTogglTimerSettings", pomoTogglTimerSettings);
+			VSS.notifyLoadSucceeded();
+		});
 block content
 	#startTimer.section				
 		#apiKey.section

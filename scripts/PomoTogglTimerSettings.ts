@@ -20,11 +20,13 @@ interface ITogglSettingsResponse {
 
 class PomoTogglTimerSettings {
     webContext: any;
+    dataService: any;
     togglApiTokenKey: string;
     STATE_FIELD: string = "System.State";
     REASON_FIELD: string = "System.Reason";
 
-    constructor(workItem: any) {
+    constructor(DataService: any) {
+        this.dataService = DataService;
         this.webContext = VSS.getWebContext();
         this.togglApiTokenKey = this.webContext.user.uniqueName + "_togglAPIKey";
         this.initializeForm();

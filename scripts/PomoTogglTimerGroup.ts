@@ -1,14 +1,14 @@
- //---------------------------------------------------------------------
- // <copyright file="TogglButtonForm.ts">
- //    This code is licensed under the MIT License.
- //    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 
- //    ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
- //    TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
- //    PARTICULAR PURPOSE AND NONINFRINGEMENT.
- // </copyright>
- // <summary>All logic inside TogglButtonForm</summary>
- //---------------------------------------------------------------------
- 
+//---------------------------------------------------------------------
+// <copyright file="TogglButtonForm.ts">
+//    This code is licensed under the MIT License.
+//    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 
+//    ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+//    TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+//    PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// </copyright>
+// <summary>All logic inside TogglButtonForm</summary>
+//---------------------------------------------------------------------
+
 /// <reference path='ref/jquery.d.ts' />
 /// <reference path='ref/VSS.d.ts' />
 /// <reference path='ref/chosen.d.ts' />
@@ -32,13 +32,16 @@ interface ITogglOpts {
 
 class PomoTogglTimerGroup {
     formChangedCallbacks: any[];
-    workItem: any;
+    workItemFormService: any;
+    authenticationService: any;
     webContext: any;
     togglApiTokenKey: string;
     STATE_FIELD: string = "System.State";
     REASON_FIELD: string = "System.Reason";
 
-    constructor(workItem: any) {
+    constructor(WorkItemFormService, AuthenticationService) {
+        this.authenticationService = AuthenticationService;
+        this.workItemFormService = WorkItemFormService;
         this.webContext = VSS.getWebContext();
         this.togglApiTokenKey = this.webContext.user.uniqueName + "_togglAPIKey";
         this.initializeForm();
@@ -47,21 +50,21 @@ class PomoTogglTimerGroup {
     initializeForm() {
         var self = this;
 
-        $('#btnRefresh').click(function() {
+        $('#btnRefresh').click(function () {
             self.fetchTogglInformations();
         });
 
-        $('#btnStop').click(function() {
+        $('#btnStop').click(function () {
             self.stopCurrentTimer();
         });
 
-        $('#btnDiscard').click(function() {
+        $('#btnDiscard').click(function () {
             self.discardCurrentTimer();
         });
 
         this.loadAPIKey();
 
-        $('#txtAPIKey').on('change', function() {
+        $('#txtAPIKey').on('change', function () {
             self.hideInfosFromToggl();
         });
 
@@ -94,10 +97,10 @@ class PomoTogglTimerGroup {
                     if (reason === "New" || reason === "Investigation Complete")//Agile
                         nextState = "Active";
                 }
-                else if (currentState === "Proposed") { 
+                else if (currentState === "Proposed") {
                     nextState = "Active";
                 }
-                else if (currentState === "Approved") { 
+                else if (currentState === "Approved") {
                     nextState = "Committed";
                 }
                 break;
@@ -131,7 +134,7 @@ class PomoTogglTimerGroup {
         $('#tags').show();
         $('#tagsSelect').chosen();
         $('#btnRefresh').hide();
-        
+
         this.setNextState();
     }
 
@@ -140,14 +143,14 @@ class PomoTogglTimerGroup {
         $.ajax({
             url: './pomoTogglTimer/getUserData',
             data: { apikey: $('#txtAPIKey').val() },
-            success: function(data) {
+            success: function (data) {
                 self.errorMessage(null);
                 var currentTimer = null;
-                
+
                 if (data.time_entries) {
-                    currentTimer = data.time_entries.find(function(t) { return t.duration < 0; });
+                    currentTimer = data.time_entries.find(function (t) { return t.duration < 0; });
                 }
-                
+
                 if (currentTimer) {
                     self.showCurrentTimer(currentTimer);
                 } else {
@@ -157,7 +160,7 @@ class PomoTogglTimerGroup {
                     self.showInfosFromToggl();
                 }
             },
-            error: function(data) {
+            error: function (data) {
                 self.errorMessage(data.status, data.statusText);
             }
         });
@@ -169,33 +172,21 @@ class PomoTogglTimerGroup {
             data: { apikey: $('#txtAPIKey').val() },
             success: (data) => {
                 const COMPLETED_WORK = "Microsoft.VSTS.Scheduling.CompletedWork";
-                VSS.require(["TFS/WorkItemTracking/Services"], function (_WorkItemServices) {
-                    // Get the WorkItemFormService.  This service allows you to get/set fields/links on the 'active' work item (the work item
-                    // that currently is displayed in the UI).
-                    function getWorkItemFormService() {
-                        return _WorkItemServices.WorkItemFormService.getService();
-                    }
-
-                    getWorkItemFormService().then(function(service) {            
-                        // Get the current values for a few of the common fields
-                        service.getFieldValue(COMPLETED_WORK).then( (completedWork) => {
-                            let lastTimeEntry = data.time_entries.pop()
-                            let hours = lastTimeEntry.duration/60/60; // duration is in seconds
-                            completedWork += hours;
-                            service.setFieldValue(COMPLETED_WORK, completedWork).then( (success) => {
-                                if (success) {
-                                    console.log("Updated completed time");
-                                }else{
-                                    console.log("could not update");  
-                                }
-                            }, (err) => {
-                                console.log("could not update", err);
-                            });
-                        }, (err) => {
-                            console.log("could not update", err);
-                        }); 
-                
+                this.workItemFormService.getFieldValue(COMPLETED_WORK).then((completedWork) => {
+                    let lastTimeEntry = data.time_entries.pop()
+                    let hours = lastTimeEntry.duration / 60 / 60; // duration is in seconds
+                    completedWork += hours;
+                    this.workItemFormService.setFieldValue(COMPLETED_WORK, completedWork).then((success) => {
+                        if (success) {
+                            console.log("Updated completed time");
+                        } else {
+                            console.log("could not update");
+                        }
+                    }, (err) => {
+                        console.log("could not update", err);
                     });
+                }, (err) => {
+                    console.log("could not update", err);
                 });
             },
             error: (data) => {
@@ -212,70 +203,56 @@ class PomoTogglTimerGroup {
             .attr('data-timeentryid', currentTimer.id);
     };
 
-    startTimer(){
-        VSS.require([
-            "TFS/WorkItemTracking/Services",
-            "VSS/Authentication/Services"
-        ], (_WorkItemServices, AuthenticationService) => {
-            // Get the WorkItemFormService.  This service allows you to get/set fields/links on the 'active' work item (the work item
-            // that currently is displayed in the UI).
-            function getWorkItemFormService() {
-                return _WorkItemServices.WorkItemFormService.getService();
-            }
+    startTimer() {
+        this.workItemFormService.getID().then((workItemID) => {
+            let result = this.getFormInputs();
+            $.ajax({
+                url: './pomoTogglTimer/startTimer',
+                method: 'POST',
+                data: result,
+                success: (data) => {
+                    alert('Timer started successfully');
+                    $('li[command="TogglButton"]').find('img').attr('src', 'https://localhost:43000/images/active-16.png')
 
-        getWorkItemFormService().then((service) => {
-                // Get the current values for a few of the common fields
-                service.getID().then((workItemID) => {
-                    let result = this.getFormInputs();
-                    $.ajax({
-                        url: './pomoTogglTimer/startTimer',
-                        method: 'POST',
-                        data: result,
-                        success: function(data) {
-                            alert('Timer started successfully');
-                            $('li[command="TogglButton"]').find('img').attr('src', 'https://localhost:43000/images/active-16.png')
-                            
-                            var authTokenManager = AuthenticationService.authTokenManager;
-                            authTokenManager.getToken().then(function (token){
-                                var header = authTokenManager.getAuthorizationHeader(token);
-                                $.ajaxSetup({headers: {'Authorization': header}});
-                                
-                                var postData = [{
-                                    'op': 'add',
-                                    'path': '/fields/System.History',
-                                    'value': 'Toggl.com timer started'
-                                }];
-                                
-                                if (result.nextState){
-                                    postData = postData.concat([{
-                                        'op': 'add',
-                                        'path': '/fields/System.State',
-                                        'value': result.nextState
-                                    }]);
-                                }
+                    var authTokenManager = AuthenticationService.authTokenManager;
+                    authTokenManager.getToken().then(function (token) {
+                        var header = authTokenManager.getAuthorizationHeader(token);
+                        $.ajaxSetup({ headers: { 'Authorization': header } });
 
-                                service.getWorkItemResourceUrl(workItemID).then((apiURI)=>{
-                                    //var apiURI = this.webContext.collection.uri + "_apis/wit/workitems/" + workItemID + "?api-version=1.0";
-                                    $.ajax({
-                                        type: 'PATCH',
-                                        url: apiURI,
-                                        contentType: 'application/json-patch+json',
-                                        data: JSON.stringify(postData),
-                                        success(data){
-                                            if (console) console.log('History updated successful');
-                                        },
-                                        error(error){
-                                            if (console) console.log('Error ' + error.status + ': ' + error.statusText);                                                            
-                                        }
-                                    });
-                                });
-                            });
-                        },
-                        error: (err) => {
-                            alert('Not possible to start the timer. Error ' + err.status + ': ' + err.statusText);
+                        var postData = [{
+                            'op': 'add',
+                            'path': '/fields/System.History',
+                            'value': 'Toggl.com timer started'
+                        }];
+
+                        if (result.nextState) {
+                            postData = postData.concat([{
+                                'op': 'add',
+                                'path': '/fields/System.State',
+                                'value': result.nextState
+                            }]);
                         }
+
+                        this.workItemFormService.getWorkItemResourceUrl(workItemID).then((apiURI) => {
+                            //var apiURI = this.webContext.collection.uri + "_apis/wit/workitems/" + workItemID + "?api-version=1.0";
+                            $.ajax({
+                                type: 'PATCH',
+                                url: apiURI,
+                                contentType: 'application/json-patch+json',
+                                data: JSON.stringify(postData),
+                                success(data) {
+                                    if (console) console.log('History updated successful');
+                                },
+                                error(error) {
+                                    if (console) console.log('Error ' + error.status + ': ' + error.statusText);
+                                }
+                            });
+                        });
                     });
-                });
+                },
+                error: (err) => {
+                    alert('Not possible to start the timer. Error ' + err.status + ': ' + err.statusText);
+                }
             });
         });
     }
@@ -306,10 +283,10 @@ class PomoTogglTimerGroup {
             url: './pomoTogglTimer/discardTimer',
             method: 'DELETE',
             data: { timeEntryId: $('#activeActivityStartTime').data('timeentryid'), apikey: $('#txtAPIKey').val() },
-            success: function(data) {
+            success: function (data) {
                 self.initializeForm();
             },
-            error: function(data) {
+            error: function (data) {
                 self.errorMessage(data.status, data.statusText);
             }
         })
@@ -332,24 +309,10 @@ class PomoTogglTimerGroup {
             $('#error').html('<p>Error ' + status + ': ' + message + '</p>')
     }
 
-    fillDescriptionInfo(){
-        VSS.require([
-            "TFS/WorkItemTracking/Services",
-            "VSS/Authentication/Services"
-        ], (_WorkItemServices, AuthenticationService) => {
-            // Get the WorkItemFormService.  This service allows you to get/set fields/links on the 'active' work item (the work item
-            // that currently is displayed in the UI).
-            function getWorkItemFormService() {
-                return _WorkItemServices.WorkItemFormService.getService();
-            }
-
-            getWorkItemFormService().then((service) => {
-                // Get the current values for a few of the common fields
-                service.getID().then((workItemID) => {
-                    service.getFieldValue("System.Title").then((title) => {
-                         $('#txtDescription').val(title + " (id: " + workItemID + ")");
-                    });
-                });
+    fillDescriptionInfo() {
+        this.workItemFormService.getID().then((workItemID) => {
+            this.workItemFormService.getFieldValue("System.Title").then((title) => {
+                $('#txtDescription').val(title + " (id: " + workItemID + ")");
             });
         });
     }
@@ -358,7 +321,7 @@ class PomoTogglTimerGroup {
         var $tagSelect = $('#tagsSelect');
         $tagSelect.find("option[value!='']").remove();
 
-        tags.forEach(function(tag) {
+        tags.forEach(function (tag) {
             var $option = $('<option>', {
                 value: tag.name,
                 text: tag.name
@@ -368,7 +331,7 @@ class PomoTogglTimerGroup {
     }
 
     fillProjectsAndClientsInfo(clients, projects) {
-        projects = projects.filter(function(project) {
+        projects = projects.filter(function (project) {
             return project.server_deleted_at == undefined;
         });
 
@@ -377,11 +340,11 @@ class PomoTogglTimerGroup {
         //$projects.find("option[value!='']").remove();
         $projects.find("option").remove();
 
-        clients.forEach(function(client) {
+        clients.forEach(function (client) {
             var $optGroup = $('<optGroup>', { label: client.name });
-            projects.filter(function(project) {
+            projects.filter(function (project) {
                 return project.cid === client.id;
-            }).forEach(function(project) {
+            }).forEach(function (project) {
                 var $opt = $('<option>', {
                     value: project.id,
                     text: project.name
@@ -392,14 +355,14 @@ class PomoTogglTimerGroup {
             $projects.append($optGroup);
         });
 
-        var withoutClients = projects.filter(function(project) {
+        var withoutClients = projects.filter(function (project) {
             return project.cid == undefined;
         });
 
         if (withoutClients.length > 0) {
             var $optNoClient = $('<optGroup>', { label: 'No client' });
 
-            withoutClients.forEach(function(project) {
+            withoutClients.forEach(function (project) {
                 var $opt = $('<option>', {
                     value: project.id,
                     text: project.name
@@ -423,6 +386,41 @@ class PomoTogglTimerGroup {
             nextState: $('#chkChangeState').prop('checked') == false ? "" : $('#nextState').html()
         };
     };
+
+    notify(title: string, body: string) {
+        let options = {
+            body,
+            badge: "https://vso-toggl-pomo.azurewebsites.net/images/active-16.png",
+            icon: "https://vso-toggl-pomo.azurewebsites.net/images/toggl_wide.png",
+            vibrate: [200, 100, 200],
+            renotify: true,
+            requireInteraction: true,
+        }
+
+        // Let's check if the browser supports notifications
+        if (!("Notification" in window)) {
+            return false;
+        }
+
+        // Let's check whether notification permissions have already been granted
+        else if (Notification.permission === "granted") {
+            // If it's okay let's create a notification
+            let notification = new Notification(title, options);
+        }
+
+        // Otherwise, we need to ask the user for permission
+        else if (Notification.permission !== 'denied') {
+            Notification.requestPermission(function (permission) {
+                // If the user accepts, let's create a notification
+                if (permission === "granted") {
+                    let notification = new Notification(title, options);
+                }
+            });
+        }
+
+        // Finally, if the user has denied notifications and you 
+        // want to be respectful there is no need to bother them any more.
+    }
 
     onFormChanged(callback) {
         if (this.formChangedCallbacks) {
