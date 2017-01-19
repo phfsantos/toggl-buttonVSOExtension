@@ -40,10 +40,11 @@ block scriptsBody
 			getWorkItemFormService().then((workItemFormService) => {
 				var pomoTogglTimerGroup = new PomoTogglTimerGroup(WorkItemFormService, AuthenticationService);
 				VSS.register("pomoTogglTimerGroup", pomoTogglTimerGroup);
+				
+				VSS.notifyLoadSucceeded();
 			});
 		});
 
-		VSS.notifyLoadSucceeded();
 block content
 	#startTimer.section
 		#activityTitle.section
