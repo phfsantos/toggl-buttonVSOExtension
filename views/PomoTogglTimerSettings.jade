@@ -29,9 +29,11 @@ block scriptsBody
 
 		// Get the data service
 		//VSS.getService(VSS.ServiceIds.ExtensionData).then((dataService) => {
+		VSS.ready( () => {
 			var pomoTogglTimerSettings = new PomoTogglTimerSettings();
 			VSS.register("PomoTogglTimerSettings", pomoTogglTimerSettings);
 			VSS.notifyLoadSucceeded();
+		});
 		//});
 block content
 	#startTimer.section
