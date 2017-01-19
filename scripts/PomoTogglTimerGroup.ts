@@ -151,6 +151,7 @@ class PomoTogglTimerGroup {
                 if (currentTimer) {
                     self.showCurrentTimer(currentTimer);
                 } else {
+                    self.fillDescriptionInfo();
                     self.fillTagsInfo(data.tags);
                     self.fillProjectsAndClientsInfo(data.clients, data.projects);
                     self.showInfosFromToggl();
