@@ -11,7 +11,7 @@
 
 /// <reference path='ref/jquery.d.ts' />
 /// <reference path='ref/VSS.d.ts' />
-/// <reference path='TogglButtonForm.ts' />
+/// <reference path='PomoTogglTimerGroup.ts' />
 
 class TogglButtonDialogLauncher {
     constructor(public actionContext: any) {
@@ -33,7 +33,7 @@ class TogglButtonDialogLauncher {
                         VSS.getService("ms.vss-web.dialog-service").then(function(dialogSvc: IHostDialogService) {
 
                             //The Form!
-                            var togglBtnForm: TogglButtonForm;
+                            var togglBtnForm: PomoTogglTimerGroup;
                             var webContext = VSS.getWebContext();
 
                             //contribution info
@@ -51,54 +51,7 @@ class TogglButtonDialogLauncher {
                                 okCallback: function(result: ITogglFormResponse) {
                                     /// TODO: Call Toggl.com to start the activity
                                     console.log('Starting time in toggl.com');
-                                    $.ajax({
-                                        url: './togglButtonForm/startTimer',
-                                        method: 'POST',
-                                        data: result,
-                                        success: function(data) {
-                                            alert('Timer started successfully');
-                                            $('li[command="TogglButton"]').find('img').attr('src', 'https://localhost:43000/images/active-16.png')
-                                            
-                                            var authTokenManager = AuthenticationService.authTokenManager;
-                                            authTokenManager.getToken()
-                                                .then(function (token){
-                                                    var header = authTokenManager.getAuthorizationHeader(token);
-                                                    $.ajaxSetup({headers: {'Authorization': header}});
-                                                    
-                                                    var postData = [{
-                                                        'op': 'add',
-                                                        'path': '/fields/System.History',
-                                                        'value': 'Toggl.com timer started'
-                                                    }];
-                                                    
-                                                    if (result.nextState){
-                                                        postData = postData.concat([{
-                                                            'op': 'add',
-                                                            'path': '/fields/System.State',
-                                                            'value': result.nextState
-                                                        }]);
-                                                    }
-                                                    
-                                                    var apiURI = webContext.collection.uri + "_apis/wit/workitems/" + workItem.id + "?api-version=1.0";
-                                                    
-                                                    $.ajax({
-                                                        type: 'PATCH',
-                                                        url: apiURI,
-                                                        contentType: 'application/json-patch+json',
-                                                        data: JSON.stringify(postData),
-                                                        success: function(data){
-                                                            if (console) console.log('History updated successful');
-                                                        },
-                                                        error: function(error){
-                                                            if (console) console.log('Error ' + error.status + ': ' + error.statusText);                                                            
-                                                        }
-                                                    })
-                                                });
-                                        },
-                                        error: function(err) {
-                                            alert('Not possible to start the timer. Error ' + err.status + ': ' + err.statusText);
-                                        }
-                                    });
+                                    
                                 },
                                 getDialogResult: function() {
                                     return togglBtnForm ? togglBtnForm.getFormInputs() : null;
@@ -113,8 +66,8 @@ class TogglButtonDialogLauncher {
 
                             //open dialog, attach form change listeners and ok button anabler listener
                             dialogSvc.openDialog(dialogContributionId, dialogOptions, contributionContext).then(function(dialog: IExternalDialog) {
-                                dialog.getContributionInstance("TogglButtonForm").then(function(togglButtonFormInstance: TogglButtonForm) {
-                                    togglBtnForm = togglButtonFormInstance;
+                                dialog.getContributionInstance("PomoTogglTimerGroup").then(function(pomoTogglTimerInstance: PomoTogglTimerGroup) {
+                                    togglBtnForm = pomoTogglTimerInstance;
 
                                     togglBtnForm.onFormChanged(function(formInput) {
                                         dialog.updateOkButton(formInput.primaryId > 0);

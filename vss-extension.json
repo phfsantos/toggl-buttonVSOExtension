@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
-  "version": "1.3.4",
-  "name": "Toggl Pomodoro Time Trcker",
-  "id": "TogglButtonPomo",
+  "version": "1.0.0",
+  "name": "PomoToggl Timer",
+  "id": "PomoTogglTimer",
   "description": "VSTS and toggl.com integration with builtin pomodoro",
   "publisher": "ordepim",
   "baseUri": "https://vso-toggl-pomo.azurewebsites.net",
@@ -60,40 +60,25 @@
   ],
   "contributions": [
     {
-      "id": "TogglButton",
-      "type": "ms.vss-web.action",
-      "description": "Track time for this workitem",
-      "targets": [
-        "ms.vss-work-web.work-item-toolbar-menu"
-      ],
+      "id": "pomoTogglTimerSettings",
+      "targets": [ "ms.vss-web.collection-admin-hub-group" ],
+      "type": "ms.vss-web.hub",
       "properties": {
-        "text": "Track your time",
-        "title": "TogglButton",
-        "toolbarText": "Start Time",
-        "icon": "images/active-16.png",
-        "group": "actions",
-        "uri": "TogglButton",
-        "registeredObjectId": "TogglButton"
-      }
-    },
-    {
-      "id": "TogglButtonForm",
-      "targets": [ ".controls" ],
-      "type": "ms.vss-web.control",
-      "properties": {
-        "uri": "TogglButtonForm"
+        "name": "PomoToggl Timer",
+        "order": 30,
+        "uri": "pomoTogglTimerSettings"
       }
     },
     {  
-        "id": "PomoTogglButtonGroup",
+        "id": "pomoTogglTimerGroup",
         "type": "ms.vss-work-web.work-item-form-group",
         "description": "Pomodoro time tracking integrated with Toggl",
         "targets": [
             "ms.vss-work-web.work-item-form"
         ],
         "properties": {
-            "name": "My Group",
-            "uri": "TogglButtonForm",
+            "name": "PomoToggl Timer",
+            "uri": "pomoTogglTimerGroup",
             "height": 600
         }
     }

@@ -12,9 +12,15 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/togglButton', function(req, res, next) {
-  res.render('togglButton', { title: 'Express' });
+/* GET Group button. */
+router.get('/pomoTogglTimerSettings', function(req, res, next) {
+  res.render('pomoTogglTimerSettings', { title: 'Express' });
+});
+
+
+/* GET pomo toggl settings. */
+router.get('/pomoTogglTimerGroup', function (req, res, next) {
+    res.render('pomoTogglTimerGroup', {});
 });
 
 module.exports = router;
