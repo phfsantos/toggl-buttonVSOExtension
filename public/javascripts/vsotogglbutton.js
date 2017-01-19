@@ -30,7 +30,6 @@ var PomoTogglTimerGroup = (function () {
         $('#btnDiscard').click(function () {
             self.discardCurrentTimer();
         });
-        $('#txtDescription').val(this.workItem.fields["System.Title"] + " (id: " + this.workItem.id + ")");
         this.loadAPIKey();
         $('#txtAPIKey').on('change', function () {
             self.hideInfosFromToggl();
@@ -115,6 +114,7 @@ var PomoTogglTimerGroup = (function () {
                     self.showCurrentTimer(currentTimer);
                 }
                 else {
+                    self.fillDescriptionInfo();
                     self.fillTagsInfo(data.tags);
                     self.fillProjectsAndClientsInfo(data.clients, data.projects);
                     self.showInfosFromToggl();
@@ -288,6 +288,26 @@ var PomoTogglTimerGroup = (function () {
         $errorDiv.html('');
         if (status != null && status != 200)
             $('#error').html('<p>Error ' + status + ': ' + message + '</p>');
+    };
+    PomoTogglTimerGroup.prototype.fillDescriptionInfo = function () {
+        VSS.require([
+            "TFS/WorkItemTracking/Services",
+            "VSS/Authentication/Services"
+        ], function (_WorkItemServices, AuthenticationService) {
+            // Get the WorkItemFormService.  This service allows you to get/set fields/links on the 'active' work item (the work item
+            // that currently is displayed in the UI).
+            function getWorkItemFormService() {
+                return _WorkItemServices.WorkItemFormService.getService();
+            }
+            getWorkItemFormService().then(function (service) {
+                // Get the current values for a few of the common fields
+                service.getID().then(function (workItemID) {
+                    service.getFieldValue("System.Title").then(function (title) {
+                        $('#txtDescription').val(title + " (id: " + workItemID + ")");
+                    });
+                });
+            });
+        });
     };
     PomoTogglTimerGroup.prototype.fillTagsInfo = function (tags) {
         var $tagSelect = $('#tagsSelect');
