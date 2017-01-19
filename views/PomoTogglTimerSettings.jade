@@ -1,0 +1,55 @@
+//---------------------------------------------------------------------
+// <copyright file="TogglButtonForm.jade">
+//    This code is licensed under the MIT License.
+//    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF 
+//    ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+//    TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+//    PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// </copyright>
+// <summary>Main form for TogglButton Extension</summary>
+//---------------------------------------------------------------------
+
+extends layout
+
+block styles
+	link(rel='stylesheet', href='/stylesheets/app.css')
+	link(rel='stylesheet', href='/bower_components/chosen/chosen.min.css')
+
+block scriptsBody
+	script(src='/javascripts/sdk/scripts/VSS.SDK.js')
+	script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
+	script(src='/javascripts/vsotogglbutton.js')
+	script(src='/bower_components/chosen/chosen.jquery.min.js')
+	script(type='text/javascript').
+		VSS.init({
+			explicitNotifyLoaded: true,
+			usePlatformScripts: true,
+			usePlatformStyles: true
+		});
+
+		VSS.require([
+			"VSS/Service",
+			"VSS/Controls",
+			"VSS/Controls/Grids",
+			"TFS/WorkItemTracking/Contracts",
+			"TFS/WorkItemTracking/RestClient"],
+			function (Service, Controls, Grids, Contracts, WebApi) {
+				var togglButtonForm = new PomoTogglTimerSettings();
+				VSS.register("TogglButtonSettings", togglButtonSettings);
+				VSS.notifyLoadSucceeded();
+			});
+block content
+	#startTimer.section				
+		#apiKey.section
+			div(class='labelTitle')
+				p Toggl API Key
+			div
+				input(type='password' class='textBox' id='txtAPIKey' placeholder='Toggl API Key' value='')  			
+				
+		#btnRefresh.buttonDiv
+			span
+				button(class='btn' id='btnRefresh') Refresh
+				
+		#error.section
+			span.error
+			
