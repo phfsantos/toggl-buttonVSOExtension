@@ -221,7 +221,7 @@ class PomoTogglTimerGroup {
     };
 
     startTimer() {
-        this.workItemFormService.getID().then((workItemID) => {
+        this.workItemFormService.getId().then((workItemID) => {
                 let result = this.getFormInputs();
                 $.ajax({
                     url: './pomoTogglTimer/startTimer',
@@ -325,7 +325,7 @@ class PomoTogglTimerGroup {
     }
 
     fillDescriptionInfo() {
-        this.workItemFormService.getID().then((workItemID) => {
+        this.workItemFormService.getId().then((workItemID) => {
                 this.workItemFormService.getFieldValue("System.Title").then((title) => {
                     $('#txtDescription').val(title + " (id: " + workItemID + ")");
                 });

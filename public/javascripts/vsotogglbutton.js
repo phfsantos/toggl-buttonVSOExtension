@@ -188,7 +188,7 @@ var PomoTogglTimerGroup = (function () {
     ;
     PomoTogglTimerGroup.prototype.startTimer = function () {
         var _this = this;
-        this.workItemFormService.getID().then(function (workItemID) {
+        this.workItemFormService.getId().then(function (workItemID) {
             var result = _this.getFormInputs();
             $.ajax({
                 url: './pomoTogglTimer/startTimer',
@@ -286,7 +286,7 @@ var PomoTogglTimerGroup = (function () {
     };
     PomoTogglTimerGroup.prototype.fillDescriptionInfo = function () {
         var _this = this;
-        this.workItemFormService.getID().then(function (workItemID) {
+        this.workItemFormService.getId().then(function (workItemID) {
             _this.workItemFormService.getFieldValue("System.Title").then(function (title) {
                 $('#txtDescription').val(title + " (id: " + workItemID + ")");
             });
