@@ -34,14 +34,17 @@ block scriptsBody
 			// Get the WorkItemFormService.  This service allows you to get/set fields/links on the 'active' work item (the work item
 			// that currently is displayed in the UI).
 			function getWorkItemFormService() {
-				return _WorkItemServices.WorkItemFormService;
+				return _WorkItemServices.WorkItemFormService.getService();
 			}
-			
-			var pomoTogglTimerGroup = new PomoTogglTimerGroup(getWorkItemFormService(), AuthenticationService);
-			VSS.register("pomoTogglTimerGroup", pomoTogglTimerGroup);
-			
-			VSS.notifyLoadSucceeded();
+			getWorkItemFormService().then((WorkItemFormService)=>{
+				var pomoTogglTimerGroup = new PomoTogglTimerGroup(WorkItemFormService, AuthenticationService);
+				VSS.register("pomoTogglTimerGroup", pomoTogglTimerGroup);
+			});
 		});
+
+		VSS.ready(()=>{
+			VSS.notifyLoadSucceeded();
+		})
 
 block content
 	#startTimer.section

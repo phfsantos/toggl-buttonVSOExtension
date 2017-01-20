@@ -29,13 +29,12 @@ interface ITogglOpts {
     token: string;
     crendentials: any;
     onLoad: any;
-
 }
 
 class PomoTogglTimerGroup {
     apiKey: string = "";
     formChangedCallbacks: any[];
-    workItemForm: any;
+    workItemFormService: any;
     authenticationService: any;
     webContext: any;
     togglApiTokenKey: string;
@@ -44,7 +43,7 @@ class PomoTogglTimerGroup {
 
     constructor(WorkItemFormService, AuthenticationService) {
         this.authenticationService = AuthenticationService;
-        this.workItemForm = WorkItemFormService;
+        this.workItemFormService = WorkItemFormService;
         this.webContext = VSS.getWebContext();
         this.togglApiTokenKey = this.webContext.user.uniqueName + "_togglAPIKey";
         this.initializeForm();
@@ -80,8 +79,7 @@ class PomoTogglTimerGroup {
 
     setNextState() {
         var nextState = "";
-        this.workItemForm.getService().then((workItemFormService) => {
-            workItemFormService.getFieldValues([
+        this.workItemFormService.getFieldValues([
                 this.STATE_FIELD,
                 this.REASON_FIELD,
                 "System.WorkItemType",
@@ -127,7 +125,6 @@ class PomoTogglTimerGroup {
                     $('#changeWIState').show();
                 }
             })
-        })
     }
 
     hideInfosFromToggl() {
@@ -183,12 +180,11 @@ class PomoTogglTimerGroup {
             data: { apikey: this.apiKey },
             success: (data) => {
                 const COMPLETED_WORK = "Microsoft.VSTS.Scheduling.CompletedWork";
-                this.workItemForm.getService().then((workItemFormService) => {
-                    workItemFormService.getFieldValue(COMPLETED_WORK).then((completedWork) => {
+                this.workItemFormService.getFieldValue(COMPLETED_WORK).then((completedWork) => {
                         let lastTimeEntry = data.time_entries.pop()
                         let hours = lastTimeEntry.duration / 60 / 60; // duration is in seconds
                         completedWork += hours;
-                        workItemFormService.setFieldValue(COMPLETED_WORK, completedWork).then((success) => {
+                        this.workItemFormService.setFieldValue(COMPLETED_WORK, completedWork).then((success) => {
                             if (success) {
                                 console.log("Updated completed time");
                             } else {
@@ -200,7 +196,6 @@ class PomoTogglTimerGroup {
                     }, (err) => {
                         console.log("could not update", err);
                     });
-                });
             },
             error: (data) => {
                 this.errorMessage(data.status, data.statusText);
@@ -226,8 +221,7 @@ class PomoTogglTimerGroup {
     };
 
     startTimer() {
-        this.workItemForm.getService().then((workItemFormService) => {
-            workItemFormService.getID().then((workItemID) => {
+        this.workItemFormService.getID().then((workItemID) => {
                 let result = this.getFormInputs();
                 $.ajax({
                     url: './pomoTogglTimer/startTimer',
@@ -256,7 +250,7 @@ class PomoTogglTimerGroup {
                                 }]);
                             }
 
-                            workItemFormService.getWorkItemResourceUrl(workItemID).then((apiURI) => {
+                            this.workItemFormService.getWorkItemResourceUrl(workItemID).then((apiURI) => {
                                 //var apiURI = this.webContext.collection.uri + "_apis/wit/workitems/" + workItemID + "?api-version=1.0";
                                 $.ajax({
                                     type: 'PATCH',
@@ -278,7 +272,6 @@ class PomoTogglTimerGroup {
                     }
                 });
             });
-        })
     }
 
     stopCurrentTimer() {
@@ -332,13 +325,11 @@ class PomoTogglTimerGroup {
     }
 
     fillDescriptionInfo() {
-        this.workItemForm.getService().then((workItemFormService) => {
-            workItemFormService.getID().then((workItemID) => {
-                workItemFormService.getFieldValue("System.Title").then((title) => {
+        this.workItemFormService.getID().then((workItemID) => {
+                this.workItemFormService.getFieldValue("System.Title").then((title) => {
                     $('#txtDescription').val(title + " (id: " + workItemID + ")");
                 });
             });
-        });
     }
 
     fillTagsInfo(tags) {

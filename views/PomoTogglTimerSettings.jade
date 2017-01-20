@@ -29,24 +29,23 @@ block scriptsBody
 
 		// Get the data service
 		//VSS.getService(VSS.ServiceIds.ExtensionData).then((dataService) => {
-		VSS.ready( () => {
+		VSS.ready(() => {
 			var pomoTogglTimerSettings = new PomoTogglTimerSettings();
 			VSS.register("PomoTogglTimerSettings", pomoTogglTimerSettings);
 			VSS.notifyLoadSucceeded();
 		});
 		//});
 block content
-	#startTimer.section
-		#apiKey.section
-			div(class='labelTitle')
-				p Toggl API Key
-			div
-				input(type='password' class='textBox' id='txtAPIKey' placeholder='Toggl API Key' value='')  			
-				
-		#btnRefresh.buttonDiv
-			span
-				button(class='btn' id='btnRefresh') Refresh
-				
-		#error.section
-			span.error
+	#apiKey.section
+		div(class='labelTitle')
+			p Toggl API Key
+		div
+			input(type='password' class='textBox' id='txtAPIKey' placeholder='Toggl API Key' value='')  			
+			
+	#btnRefresh.buttonDiv
+		span
+			button(class='btn' id='btnRefresh') Refresh
+			
+	#error.section
+		span.error
 			
