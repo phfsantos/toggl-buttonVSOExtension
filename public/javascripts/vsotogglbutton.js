@@ -18,7 +18,7 @@ var PomoTogglTimerGroup = (function () {
         this.STATE_FIELD = "System.State";
         this.REASON_FIELD = "System.Reason";
         this.authenticationService = AuthenticationService;
-        this.workItemForm = WorkItemFormService;
+        this.workItemFormService = WorkItemFormService;
         this.webContext = VSS.getWebContext();
         this.togglApiTokenKey = this.webContext.user.uniqueName + "_togglAPIKey";
         this.initializeForm();
@@ -49,52 +49,50 @@ var PomoTogglTimerGroup = (function () {
     PomoTogglTimerGroup.prototype.setNextState = function () {
         var _this = this;
         var nextState = "";
-        this.workItemForm.getService().then(function (workItemFormService) {
-            workItemFormService.getFieldValues([
-                _this.STATE_FIELD,
-                _this.REASON_FIELD,
-                "System.WorkItemType",
-            ]).then(function (fields) {
-                var currentState = fields[_this.STATE_FIELD];
-                switch (fields["System.WorkItemType"]) {
-                    case 'Product Backlog Item':
-                        if (currentState === "Approved") {
-                            nextState = "Committed";
-                        }
-                        break;
-                    case 'User Story':
-                    case 'Requirement':
-                        if (currentState === "New") {
+        this.workItemFormService.getFieldValues([
+            this.STATE_FIELD,
+            this.REASON_FIELD,
+            "System.WorkItemType",
+        ]).then(function (fields) {
+            var currentState = fields[_this.STATE_FIELD];
+            switch (fields["System.WorkItemType"]) {
+                case 'Product Backlog Item':
+                    if (currentState === "Approved") {
+                        nextState = "Committed";
+                    }
+                    break;
+                case 'User Story':
+                case 'Requirement':
+                    if (currentState === "New") {
+                        nextState = "Active";
+                    }
+                    break;
+                case 'Bug':
+                    if (currentState === "New") {
+                        var reason = fields[_this.REASON_FIELD];
+                        if (reason === "New" || reason === "Investigation Complete")
                             nextState = "Active";
-                        }
-                        break;
-                    case 'Bug':
-                        if (currentState === "New") {
-                            var reason = fields[_this.REASON_FIELD];
-                            if (reason === "New" || reason === "Investigation Complete")
-                                nextState = "Active";
-                        }
-                        else if (currentState === "Proposed") {
-                            nextState = "Active";
-                        }
-                        else if (currentState === "Approved") {
-                            nextState = "Committed";
-                        }
-                        break;
-                    case 'Task':
-                        if (currentState === "To Do") {
-                            nextState = "In Progress";
-                        }
-                        else if (currentState === "New" || currentState === "Proposed") {
-                            nextState = "Active";
-                        }
-                        break;
-                }
-                if (nextState) {
-                    $('#nextState').html(nextState);
-                    $('#changeWIState').show();
-                }
-            });
+                    }
+                    else if (currentState === "Proposed") {
+                        nextState = "Active";
+                    }
+                    else if (currentState === "Approved") {
+                        nextState = "Committed";
+                    }
+                    break;
+                case 'Task':
+                    if (currentState === "To Do") {
+                        nextState = "In Progress";
+                    }
+                    else if (currentState === "New" || currentState === "Proposed") {
+                        nextState = "Active";
+                    }
+                    break;
+            }
+            if (nextState) {
+                $('#nextState').html(nextState);
+                $('#changeWIState').show();
+            }
         });
     };
     PomoTogglTimerGroup.prototype.hideInfosFromToggl = function () {
@@ -148,24 +146,22 @@ var PomoTogglTimerGroup = (function () {
             data: { apikey: this.apiKey },
             success: function (data) {
                 var COMPLETED_WORK = "Microsoft.VSTS.Scheduling.CompletedWork";
-                _this.workItemForm.getService().then(function (workItemFormService) {
-                    workItemFormService.getFieldValue(COMPLETED_WORK).then(function (completedWork) {
-                        var lastTimeEntry = data.time_entries.pop();
-                        var hours = lastTimeEntry.duration / 60 / 60; // duration is in seconds
-                        completedWork += hours;
-                        workItemFormService.setFieldValue(COMPLETED_WORK, completedWork).then(function (success) {
-                            if (success) {
-                                console.log("Updated completed time");
-                            }
-                            else {
-                                console.log("could not update");
-                            }
-                        }, function (err) {
-                            console.log("could not update", err);
-                        });
+                _this.workItemFormService.getFieldValue(COMPLETED_WORK).then(function (completedWork) {
+                    var lastTimeEntry = data.time_entries.pop();
+                    var hours = lastTimeEntry.duration / 60 / 60; // duration is in seconds
+                    completedWork += hours;
+                    _this.workItemFormService.setFieldValue(COMPLETED_WORK, completedWork).then(function (success) {
+                        if (success) {
+                            console.log("Updated completed time");
+                        }
+                        else {
+                            console.log("could not update");
+                        }
                     }, function (err) {
                         console.log("could not update", err);
                     });
+                }, function (err) {
+                    console.log("could not update", err);
                 });
             },
             error: function (data) {
@@ -192,55 +188,53 @@ var PomoTogglTimerGroup = (function () {
     ;
     PomoTogglTimerGroup.prototype.startTimer = function () {
         var _this = this;
-        this.workItemForm.getService().then(function (workItemFormService) {
-            workItemFormService.getID().then(function (workItemID) {
-                var result = _this.getFormInputs();
-                $.ajax({
-                    url: './pomoTogglTimer/startTimer',
-                    type: 'POST',
-                    data: result,
-                    success: function (data) {
-                        alert('Timer started successfully');
-                        $('li[command="TogglButton"]').find('img').attr('src', 'https://localhost:43000/images/active-16.png');
-                        var authTokenManager = _this.authenticationService.authTokenManager;
-                        authTokenManager.getToken().then(function (token) {
-                            var header = authTokenManager.getAuthorizationHeader(token);
-                            $.ajaxSetup({ headers: { 'Authorization': header } });
-                            var postData = [{
+        this.workItemFormService.getID().then(function (workItemID) {
+            var result = _this.getFormInputs();
+            $.ajax({
+                url: './pomoTogglTimer/startTimer',
+                type: 'POST',
+                data: result,
+                success: function (data) {
+                    alert('Timer started successfully');
+                    $('li[command="TogglButton"]').find('img').attr('src', 'https://localhost:43000/images/active-16.png');
+                    var authTokenManager = _this.authenticationService.authTokenManager;
+                    authTokenManager.getToken().then(function (token) {
+                        var header = authTokenManager.getAuthorizationHeader(token);
+                        $.ajaxSetup({ headers: { 'Authorization': header } });
+                        var postData = [{
+                                'op': 'add',
+                                'path': '/fields/System.History',
+                                'value': 'Toggl.com timer started'
+                            }];
+                        if (result.nextState) {
+                            postData = postData.concat([{
                                     'op': 'add',
-                                    'path': '/fields/System.History',
-                                    'value': 'Toggl.com timer started'
-                                }];
-                            if (result.nextState) {
-                                postData = postData.concat([{
-                                        'op': 'add',
-                                        'path': '/fields/System.State',
-                                        'value': result.nextState
-                                    }]);
-                            }
-                            workItemFormService.getWorkItemResourceUrl(workItemID).then(function (apiURI) {
-                                //var apiURI = this.webContext.collection.uri + "_apis/wit/workitems/" + workItemID + "?api-version=1.0";
-                                $.ajax({
-                                    type: 'PATCH',
-                                    url: apiURI,
-                                    contentType: 'application/json-patch+json',
-                                    data: JSON.stringify(postData),
-                                    success: function (data) {
-                                        if (console)
-                                            console.log('History updated successful');
-                                    },
-                                    error: function (error) {
-                                        if (console)
-                                            console.log('Error ' + error.status + ': ' + error.statusText);
-                                    }
-                                });
+                                    'path': '/fields/System.State',
+                                    'value': result.nextState
+                                }]);
+                        }
+                        this.workItemFormService.getWorkItemResourceUrl(workItemID).then(function (apiURI) {
+                            //var apiURI = this.webContext.collection.uri + "_apis/wit/workitems/" + workItemID + "?api-version=1.0";
+                            $.ajax({
+                                type: 'PATCH',
+                                url: apiURI,
+                                contentType: 'application/json-patch+json',
+                                data: JSON.stringify(postData),
+                                success: function (data) {
+                                    if (console)
+                                        console.log('History updated successful');
+                                },
+                                error: function (error) {
+                                    if (console)
+                                        console.log('Error ' + error.status + ': ' + error.statusText);
+                                }
                             });
                         });
-                    },
-                    error: function (err) {
-                        alert('Not possible to start the timer. Error ' + err.status + ': ' + err.statusText);
-                    }
-                });
+                    });
+                },
+                error: function (err) {
+                    alert('Not possible to start the timer. Error ' + err.status + ': ' + err.statusText);
+                }
             });
         });
     };
@@ -291,11 +285,10 @@ var PomoTogglTimerGroup = (function () {
             $('#error').html('<p>Error ' + status + ': ' + message + '</p>');
     };
     PomoTogglTimerGroup.prototype.fillDescriptionInfo = function () {
-        this.workItemForm.getService().then(function (workItemFormService) {
-            workItemFormService.getID().then(function (workItemID) {
-                workItemFormService.getFieldValue("System.Title").then(function (title) {
-                    $('#txtDescription').val(title + " (id: " + workItemID + ")");
-                });
+        var _this = this;
+        this.workItemFormService.getID().then(function (workItemID) {
+            _this.workItemFormService.getFieldValue("System.Title").then(function (title) {
+                $('#txtDescription').val(title + " (id: " + workItemID + ")");
             });
         });
     };
