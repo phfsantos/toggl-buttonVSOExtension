@@ -1,6 +1,6 @@
 {
   "manifestVersion": 1,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "name": "PomoToggl Timer",
   "id": "PomoTogglTimer",
   "description": "VSTS and toggl.com integration with builtin pomodoro",
@@ -28,8 +28,8 @@
   },
   "files": [
     {
-        "path": "images",
-        "addressable": "true" 
+      "path": "images",
+      "addressable": "true"
     }
   ],
   "links": {
@@ -61,7 +61,10 @@
   "contributions": [
     {
       "id": "pomoTogglTimerSettings",
-      "targets": [ "ms.vss-web.collection-admin-hub-group" ],
+      "targets": [
+        "ms.vss-web.collection-admin-hub-group",
+        "ms.vss-web.project-admin-hub-group"
+      ],
       "type": "ms.vss-web.hub",
       "properties": {
         "name": "PomoToggl Timer",
@@ -69,17 +72,17 @@
         "uri": "pomoTogglTimerSettings"
       }
     },
-    {  
-        "id": "pomoTogglTimerGroup",
-        "type": "ms.vss-work-web.work-item-form-group",
-        "description": "Pomodoro time tracking integrated with Toggl",
-        "targets": [
-            "ms.vss-work-web.work-item-form"
-        ],
-        "properties": {
-            "name": "PomoToggl Timer",
-            "uri": "pomoTogglTimerGroup"
-        }
+    {
+      "id": "pomoTogglTimerGroup",
+      "type": "ms.vss-work-web.work-item-form-group",
+      "description": "Pomodoro time tracking integrated with Toggl",
+      "targets": [
+        "ms.vss-work-web.work-item-form"
+      ],
+      "properties": {
+        "name": "PomoToggl Timer",
+        "uri": "pomoTogglTimerGroup"
+      }
     }
   ],
   "targets": [

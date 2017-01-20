@@ -29,14 +29,9 @@ class PomoTogglTimerSettings {
         this.dataService = DataService;
         this.webContext = VSS.getWebContext();
         this.togglApiTokenKey = this.webContext.user.uniqueName + "_togglAPIKey";
-        this.initializeForm();
-    }
-
-    initializeForm() {
-        var self = this;
-
         this.loadAPIKey();
-    };
+        $("#btnSave").click(() => this.saveAPIKey());
+    }
 
     saveAPIKey() {
         var apiKey = $('#txtAPIKey').val();
@@ -45,7 +40,7 @@ class PomoTogglTimerSettings {
             var userName = this.webContext.user.uniqueName;
             var currentKey = localStorage.getItem(this.togglApiTokenKey);
 
-            if ((currentKey === '' || currentKey != apiKey) && confirm("Do you want to store Toggl API Key for future queries?")) {
+            if (currentKey === '' || currentKey != apiKey) {
                 localStorage.setItem(this.togglApiTokenKey, apiKey);
             }
         }
@@ -67,14 +62,4 @@ class PomoTogglTimerSettings {
         if (status != null && status != 200)
             $('#error').html('<p>Error ' + status + ': ' + message + '</p>')
     }
-
-    getFormInputs(): ITogglSettingsResponse {
-        var $tags = $('#tagsSelect');
-        var tags = $tags.val() ? $tags.val().toString() : '';
-
-        return {
-            apikey: $('#txtAPIKey').val(),
-            nextState: $('#chkChangeState').prop('checked') == false ? "" : $('#nextState').html()
-        };
-    };
 }

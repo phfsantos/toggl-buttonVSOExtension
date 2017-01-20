@@ -15,6 +15,7 @@ var Notification = window.Notification;
 var PomoTogglTimerGroup = (function () {
     function PomoTogglTimerGroup(WorkItemFormService, AuthenticationService) {
         this.apiKey = "";
+        this.pomodoriSize = 25;
         this.STATE_FIELD = "System.State";
         this.REASON_FIELD = "System.Reason";
         this.authenticationService = AuthenticationService;
@@ -171,6 +172,7 @@ var PomoTogglTimerGroup = (function () {
     };
     ;
     PomoTogglTimerGroup.prototype.showCurrentTimer = function (currentTimer) {
+        var _this = this;
         $('#startTimer').hide();
         $('#stopTimer').show();
         $('#activeActivityTitle').text(currentTimer.description);
@@ -183,6 +185,10 @@ var PomoTogglTimerGroup = (function () {
             var min = (milliseconds / 1000 / 60) << 0;
             var sec = (milliseconds / 1000) % 60;
             $('#activeActivityStartTime').text(min + ":" + sec);
+            if (min >= _this.pomodoriSize) {
+                _this.notify("Take a break!", "You completed a pomodori. Take a five minutes break.");
+                _this.stopCurrentTimer();
+            }
         }, 1000);
     };
     ;
@@ -403,24 +409,21 @@ var PomoTogglTimerGroup = (function () {
 /// <reference path='ref/chosen.d.ts' />
 var PomoTogglTimerSettings = (function () {
     function PomoTogglTimerSettings(DataService) {
+        var _this = this;
         this.STATE_FIELD = "System.State";
         this.REASON_FIELD = "System.Reason";
         this.dataService = DataService;
         this.webContext = VSS.getWebContext();
         this.togglApiTokenKey = this.webContext.user.uniqueName + "_togglAPIKey";
-        this.initializeForm();
-    }
-    PomoTogglTimerSettings.prototype.initializeForm = function () {
-        var self = this;
         this.loadAPIKey();
-    };
-    ;
+        $("#btnSave").click(function () { return _this.saveAPIKey(); });
+    }
     PomoTogglTimerSettings.prototype.saveAPIKey = function () {
         var apiKey = $('#txtAPIKey').val();
         if (localStorage !== undefined) {
             var userName = this.webContext.user.uniqueName;
             var currentKey = localStorage.getItem(this.togglApiTokenKey);
-            if ((currentKey === '' || currentKey != apiKey) && confirm("Do you want to store Toggl API Key for future queries?")) {
+            if (currentKey === '' || currentKey != apiKey) {
                 localStorage.setItem(this.togglApiTokenKey, apiKey);
             }
         }
@@ -441,15 +444,6 @@ var PomoTogglTimerSettings = (function () {
         if (status != null && status != 200)
             $('#error').html('<p>Error ' + status + ': ' + message + '</p>');
     };
-    PomoTogglTimerSettings.prototype.getFormInputs = function () {
-        var $tags = $('#tagsSelect');
-        var tags = $tags.val() ? $tags.val().toString() : '';
-        return {
-            apikey: $('#txtAPIKey').val(),
-            nextState: $('#chkChangeState').prop('checked') == false ? "" : $('#nextState').html()
-        };
-    };
-    ;
     return PomoTogglTimerSettings;
 })();
 //---------------------------------------------------------------------

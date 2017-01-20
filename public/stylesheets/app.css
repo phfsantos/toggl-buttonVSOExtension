@@ -18,6 +18,11 @@ body {
     margin-top: 10px;
 }
 
+.apiKey{
+    margin: 10px;
+    width: 200px;
+}
+
 .labelTitle {
     color: #B7B7B7;
 }
@@ -54,6 +59,7 @@ option {
 
 .btn {
     margin-right: 4px;
+    margin-top: 10px;
 }
 
 #startTimer {

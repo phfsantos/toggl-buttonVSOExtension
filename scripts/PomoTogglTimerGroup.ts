@@ -33,6 +33,7 @@ interface ITogglOpts {
 
 class PomoTogglTimerGroup {
     apiKey: string = "";
+    pomodoriSize: number = 25;
     formChangedCallbacks: any[];
     workItemFormService: any;
     authenticationService: any;
@@ -217,6 +218,11 @@ class PomoTogglTimerGroup {
             let sec = (milliseconds / 1000) % 60;
 
             $('#activeActivityStartTime').text(`${min}:${sec}`);
+            
+            if (min >= this.pomodoriSize) {
+                this.notify("Take a break!", "You completed a pomodori. Take a five minutes break.");
+                this.stopCurrentTimer();
+            }
         }, 1000)
     };
 
