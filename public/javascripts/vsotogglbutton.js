@@ -13,13 +13,16 @@
 /// <reference path='ref/chosen.d.ts' />
 var Notification = window.Notification;
 var PomoTogglTimerGroup = (function () {
-    function PomoTogglTimerGroup(WorkItemFormService, AuthenticationService) {
+    function PomoTogglTimerGroup(WorkItemFormService, AuthenticationService, Controls, StatusIndicator) {
         this.apiKey = "";
         this.pomodoriSize = 25;
+        this.pomodoriBreak = 5;
         this.STATE_FIELD = "System.State";
         this.REASON_FIELD = "System.Reason";
         this.authenticationService = AuthenticationService;
         this.workItemFormService = WorkItemFormService;
+        this.controls = Controls;
+        this.statusIndicator = StatusIndicator;
         this.webContext = VSS.getWebContext();
         this.togglApiTokenKey = this.webContext.user.uniqueName + "_togglAPIKey";
         this.initializeForm();
@@ -188,6 +191,7 @@ var PomoTogglTimerGroup = (function () {
             if (min >= _this.pomodoriSize) {
                 _this.notify("Take a break!", "You completed a pomodori. Take a five minutes break.");
                 _this.stopCurrentTimer();
+                _this.breakTime();
             }
         }, 1000);
     };
@@ -385,6 +389,22 @@ var PomoTogglTimerGroup = (function () {
         }
         // Finally, if the user has denied notifications and you 
         // want to be respectful there is no need to bother them any more.
+    };
+    PomoTogglTimerGroup.prototype.breakTime = function () {
+        var _this = this;
+        var container = $("#startTimer.section");
+        var waitControlOptions = {
+            target: $("#activityTitle.section"),
+            cancellable: true,
+            cancelTextFormat: "{0} to cancel",
+            cancelCallback: function () {
+                _this.startTimer();
+            }
+        };
+        var waitControl = this.controls.create(this.statusIndicator.WaitControl, container, waitControlOptions);
+        setTimeout(function () {
+            _this.notify("Break is over!", "It is time to get back to work.");
+        }, this.pomodoriBreak * 60 * 1000);
     };
     PomoTogglTimerGroup.prototype.onFormChanged = function (callback) {
         if (this.formChangedCallbacks) {

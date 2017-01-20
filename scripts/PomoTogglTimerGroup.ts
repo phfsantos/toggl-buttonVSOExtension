@@ -34,17 +34,22 @@ interface ITogglOpts {
 class PomoTogglTimerGroup {
     apiKey: string = "";
     pomodoriSize: number = 25;
+    pomodoriBreak: number = 5;
     formChangedCallbacks: any[];
     workItemFormService: any;
     authenticationService: any;
+    controls: any;
+    statusIndicator: any;
     webContext: any;
     togglApiTokenKey: string;
     STATE_FIELD: string = "System.State";
     REASON_FIELD: string = "System.Reason";
 
-    constructor(WorkItemFormService, AuthenticationService) {
+    constructor(WorkItemFormService, AuthenticationService, Controls, StatusIndicator) {
         this.authenticationService = AuthenticationService;
         this.workItemFormService = WorkItemFormService;
+        this.controls = Controls;
+        this.statusIndicator = StatusIndicator;
         this.webContext = VSS.getWebContext();
         this.togglApiTokenKey = this.webContext.user.uniqueName + "_togglAPIKey";
         this.initializeForm();
@@ -81,51 +86,51 @@ class PomoTogglTimerGroup {
     setNextState() {
         var nextState = "";
         this.workItemFormService.getFieldValues([
-                this.STATE_FIELD,
-                this.REASON_FIELD,
-                "System.WorkItemType",
-            ]).then((fields) => {
-                var currentState = fields[this.STATE_FIELD];
+            this.STATE_FIELD,
+            this.REASON_FIELD,
+            "System.WorkItemType",
+        ]).then((fields) => {
+            var currentState = fields[this.STATE_FIELD];
 
-                switch (fields["System.WorkItemType"]) {
-                    case 'Product Backlog Item':
-                        if (currentState === "Approved") {
-                            nextState = "Committed"
-                        }
-                        break;
-                    case 'User Story':
-                    case 'Requirement':
-                        if (currentState === "New") {
+            switch (fields["System.WorkItemType"]) {
+                case 'Product Backlog Item':
+                    if (currentState === "Approved") {
+                        nextState = "Committed"
+                    }
+                    break;
+                case 'User Story':
+                case 'Requirement':
+                    if (currentState === "New") {
+                        nextState = "Active";
+                    }
+                    break;
+                case 'Bug':
+                    if (currentState === "New") {
+                        var reason = fields[this.REASON_FIELD];
+                        if (reason === "New" || reason === "Investigation Complete")//Agile
                             nextState = "Active";
-                        }
-                        break;
-                    case 'Bug':
-                        if (currentState === "New") {
-                            var reason = fields[this.REASON_FIELD];
-                            if (reason === "New" || reason === "Investigation Complete")//Agile
-                                nextState = "Active";
-                        }
-                        else if (currentState === "Proposed") {
-                            nextState = "Active";
-                        }
-                        else if (currentState === "Approved") {
-                            nextState = "Committed";
-                        }
-                        break;
-                    case 'Task':
-                        if (currentState === "To Do") {
-                            nextState = "In Progress";
-                        } else if (currentState === "New" || currentState === "Proposed") {
-                            nextState = "Active";
-                        }
-                        break;
-                }
+                    }
+                    else if (currentState === "Proposed") {
+                        nextState = "Active";
+                    }
+                    else if (currentState === "Approved") {
+                        nextState = "Committed";
+                    }
+                    break;
+                case 'Task':
+                    if (currentState === "To Do") {
+                        nextState = "In Progress";
+                    } else if (currentState === "New" || currentState === "Proposed") {
+                        nextState = "Active";
+                    }
+                    break;
+            }
 
-                if (nextState) {
-                    $('#nextState').html(nextState);
-                    $('#changeWIState').show();
-                }
-            })
+            if (nextState) {
+                $('#nextState').html(nextState);
+                $('#changeWIState').show();
+            }
+        })
     }
 
     hideInfosFromToggl() {
@@ -182,21 +187,21 @@ class PomoTogglTimerGroup {
             success: (data) => {
                 const COMPLETED_WORK = "Microsoft.VSTS.Scheduling.CompletedWork";
                 this.workItemFormService.getFieldValue(COMPLETED_WORK).then((completedWork) => {
-                        let lastTimeEntry = data.time_entries.pop()
-                        let hours = lastTimeEntry.duration / 60 / 60; // duration is in seconds
-                        completedWork += hours;
-                        this.workItemFormService.setFieldValue(COMPLETED_WORK, completedWork).then((success) => {
-                            if (success) {
-                                console.log("Updated completed time");
-                            } else {
-                                console.log("could not update");
-                            }
-                        }, (err) => {
-                            console.log("could not update", err);
-                        });
+                    let lastTimeEntry = data.time_entries.pop()
+                    let hours = lastTimeEntry.duration / 60 / 60; // duration is in seconds
+                    completedWork += hours;
+                    this.workItemFormService.setFieldValue(COMPLETED_WORK, completedWork).then((success) => {
+                        if (success) {
+                            console.log("Updated completed time");
+                        } else {
+                            console.log("could not update");
+                        }
                     }, (err) => {
                         console.log("could not update", err);
                     });
+                }, (err) => {
+                    console.log("could not update", err);
+                });
             },
             error: (data) => {
                 this.errorMessage(data.status, data.statusText);
@@ -218,66 +223,67 @@ class PomoTogglTimerGroup {
             let sec = (milliseconds / 1000) % 60;
 
             $('#activeActivityStartTime').text(`${min}:${sec}`);
-            
+
             if (min >= this.pomodoriSize) {
                 this.notify("Take a break!", "You completed a pomodori. Take a five minutes break.");
                 this.stopCurrentTimer();
+                this.breakTime();
             }
         }, 1000)
     };
 
     startTimer() {
         this.workItemFormService.getId().then((workItemID) => {
-                let result = this.getFormInputs();
-                $.ajax({
-                    url: './pomoTogglTimer/startTimer',
-                    type: 'POST',
-                    data: result,
-                    success: (data) => {
-                        alert('Timer started successfully');
-                        $('li[command="TogglButton"]').find('img').attr('src', 'https://localhost:43000/images/active-16.png')
+            let result = this.getFormInputs();
+            $.ajax({
+                url: './pomoTogglTimer/startTimer',
+                type: 'POST',
+                data: result,
+                success: (data) => {
+                    alert('Timer started successfully');
+                    $('li[command="TogglButton"]').find('img').attr('src', 'https://localhost:43000/images/active-16.png')
 
-                        var authTokenManager = this.authenticationService.authTokenManager;
-                        authTokenManager.getToken().then(function (token) {
-                            var header = authTokenManager.getAuthorizationHeader(token);
-                            $.ajaxSetup({ headers: { 'Authorization': header } });
+                    var authTokenManager = this.authenticationService.authTokenManager;
+                    authTokenManager.getToken().then(function (token) {
+                        var header = authTokenManager.getAuthorizationHeader(token);
+                        $.ajaxSetup({ headers: { 'Authorization': header } });
 
-                            var postData = [{
+                        var postData = [{
+                            'op': 'add',
+                            'path': '/fields/System.History',
+                            'value': 'Toggl.com timer started'
+                        }];
+
+                        if (result.nextState) {
+                            postData = postData.concat([{
                                 'op': 'add',
-                                'path': '/fields/System.History',
-                                'value': 'Toggl.com timer started'
-                            }];
+                                'path': '/fields/System.State',
+                                'value': result.nextState
+                            }]);
+                        }
 
-                            if (result.nextState) {
-                                postData = postData.concat([{
-                                    'op': 'add',
-                                    'path': '/fields/System.State',
-                                    'value': result.nextState
-                                }]);
-                            }
-
-                            this.workItemFormService.getWorkItemResourceUrl(workItemID).then((apiURI) => {
-                                //var apiURI = this.webContext.collection.uri + "_apis/wit/workitems/" + workItemID + "?api-version=1.0";
-                                $.ajax({
-                                    type: 'PATCH',
-                                    url: apiURI,
-                                    contentType: 'application/json-patch+json',
-                                    data: JSON.stringify(postData),
-                                    success(data) {
-                                        if (console) console.log('History updated successful');
-                                    },
-                                    error(error) {
-                                        if (console) console.log('Error ' + error.status + ': ' + error.statusText);
-                                    }
-                                });
+                        this.workItemFormService.getWorkItemResourceUrl(workItemID).then((apiURI) => {
+                            //var apiURI = this.webContext.collection.uri + "_apis/wit/workitems/" + workItemID + "?api-version=1.0";
+                            $.ajax({
+                                type: 'PATCH',
+                                url: apiURI,
+                                contentType: 'application/json-patch+json',
+                                data: JSON.stringify(postData),
+                                success(data) {
+                                    if (console) console.log('History updated successful');
+                                },
+                                error(error) {
+                                    if (console) console.log('Error ' + error.status + ': ' + error.statusText);
+                                }
                             });
                         });
-                    },
-                    error: (err) => {
-                        alert('Not possible to start the timer. Error ' + err.status + ': ' + err.statusText);
-                    }
-                });
+                    });
+                },
+                error: (err) => {
+                    alert('Not possible to start the timer. Error ' + err.status + ': ' + err.statusText);
+                }
             });
+        });
     }
 
     stopCurrentTimer() {
@@ -332,10 +338,10 @@ class PomoTogglTimerGroup {
 
     fillDescriptionInfo() {
         this.workItemFormService.getId().then((workItemID) => {
-                this.workItemFormService.getFieldValue("System.Title").then((title) => {
-                    $('#txtDescription').val(title + " (id: " + workItemID + ")");
-                });
+            this.workItemFormService.getFieldValue("System.Title").then((title) => {
+                $('#txtDescription').val(title + " (id: " + workItemID + ")");
             });
+        });
     }
 
     fillTagsInfo(tags) {
@@ -441,6 +447,24 @@ class PomoTogglTimerGroup {
 
         // Finally, if the user has denied notifications and you 
         // want to be respectful there is no need to bother them any more.
+    }
+
+    breakTime() {
+        let container = $("#startTimer.section");
+        let waitControlOptions = {
+            target: $("#activityTitle.section"),
+            cancellable: true,
+            cancelTextFormat: "{0} to cancel",
+            cancelCallback: () => {
+                this.startTimer();
+            }
+        };
+
+        var waitControl: any = this.controls.create(this.statusIndicator.WaitControl, container, waitControlOptions);
+
+        setTimeout(() => {
+            this.notify("Break is over!", "It is time to get back to work.");
+        }, this.pomodoriBreak * 60 * 1000);
     }
 
     onFormChanged(callback) {

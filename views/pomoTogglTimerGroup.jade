@@ -29,8 +29,10 @@ block scriptsBody
 
 		VSS.require([
 			"TFS/WorkItemTracking/Services",
-			"VSS/Authentication/Services"
-		], (_WorkItemServices, AuthenticationService) => {
+			"VSS/Authentication/Services",
+			"VSS/Controls",
+			"VSS/Controls/StatusIndicator"
+		], (_WorkItemServices, AuthenticationService, Controls, StatusIndicator) => {
 			// Get the WorkItemFormService.  This service allows you to get/set fields/links on the 'active' work item (the work item
 			// that currently is displayed in the UI).
 			function getWorkItemFormService() {

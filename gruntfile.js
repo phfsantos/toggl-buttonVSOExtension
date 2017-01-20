@@ -23,7 +23,8 @@ module.exports = function (grunt) {
                 options: {
                     sourceMap: true,
                     declaration: false,
-                    watch: false
+                    watch: false,
+                    module: 'amd', 
                }
             },
         },
