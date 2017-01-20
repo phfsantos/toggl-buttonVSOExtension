@@ -29,9 +29,6 @@ var PomoTogglTimerGroup = (function () {
     }
     PomoTogglTimerGroup.prototype.initializeForm = function () {
         var self = this;
-        $('#btnRefresh').click(function () {
-            self.fetchTogglInformations();
-        });
         $('#btnStop').click(function () {
             self.stopCurrentTimer();
         });
@@ -183,12 +180,13 @@ var PomoTogglTimerGroup = (function () {
         var now = new Date();
         var milliseconds = Math.abs(Number(start) - Number(now));
         $('#activeActivityStartTime').attr('data-timeentryid', currentTimer.id);
-        setInterval(function () {
+        this.timerInterval = setInterval(function () {
             milliseconds += 1000;
             var min = (milliseconds / 1000 / 60) << 0;
             var sec = (milliseconds / 1000) % 60;
-            $('#activeActivityStartTime').text(min + ":" + sec);
-            if (min >= _this.pomodoriSize) {
+            var secZero = sec < 10 ? "0" : "";
+            $('#activeActivityStartTime').text(min.toFixed(0) + ":" + secZero + sec.toFixed(0));
+            if (min == _this.pomodoriSize) {
                 _this.notify("Take a break!", "You completed a pomodori. Take a five minutes break.");
                 _this.stopCurrentTimer();
                 _this.breakTime();
@@ -205,7 +203,7 @@ var PomoTogglTimerGroup = (function () {
                 type: 'POST',
                 data: result,
                 success: function (data) {
-                    alert('Timer started successfully');
+                    _this.fetchTogglInformations();
                     $('li[command="TogglButton"]').find('img').attr('src', 'https://localhost:43000/images/active-16.png');
                     var authTokenManager = _this.authenticationService.authTokenManager;
                     authTokenManager.getToken().then(function (token) {
@@ -257,9 +255,11 @@ var PomoTogglTimerGroup = (function () {
             success: function (data, textStatus, jqXHR) {
                 _this.initializeForm();
                 _this.updateCompletedTime();
+                clearInterval(_this.timerInterval);
             },
             error: function (data) {
                 _this.errorMessage(data.status, data.statusText);
+                clearInterval(_this.timerInterval);
             }
         };
         $.ajax(settings);

@@ -42,6 +42,7 @@ class PomoTogglTimerGroup {
     statusIndicator: any;
     webContext: any;
     togglApiTokenKey: string;
+    timerInterval: number;
     STATE_FIELD: string = "System.State";
     REASON_FIELD: string = "System.Reason";
 
@@ -57,10 +58,6 @@ class PomoTogglTimerGroup {
 
     initializeForm() {
         var self = this;
-
-        $('#btnRefresh').click(function () {
-            self.fetchTogglInformations();
-        });
 
         $('#btnStop').click(function () {
             self.stopCurrentTimer();
@@ -217,14 +214,14 @@ class PomoTogglTimerGroup {
         let now = new Date();
         let milliseconds = Math.abs(Number(start) - Number(now));
         $('#activeActivityStartTime').attr('data-timeentryid', currentTimer.id);
-        setInterval(() => {
+        this.timerInterval = setInterval(() => {
             milliseconds += 1000;
             let min = (milliseconds / 1000 / 60) << 0;
             let sec = (milliseconds / 1000) % 60;
+            let secZero = sec < 10 ? "0": "";
+            $('#activeActivityStartTime').text(`${min.toFixed(0)}:${secZero}${sec.toFixed(0)}`);
 
-            $('#activeActivityStartTime').text(`${min}:${sec}`);
-
-            if (min >= this.pomodoriSize) {
+            if (min == this.pomodoriSize) {
                 this.notify("Take a break!", "You completed a pomodori. Take a five minutes break.");
                 this.stopCurrentTimer();
                 this.breakTime();
@@ -240,7 +237,7 @@ class PomoTogglTimerGroup {
                 type: 'POST',
                 data: result,
                 success: (data) => {
-                    alert('Timer started successfully');
+                    this.fetchTogglInformations();
                     $('li[command="TogglButton"]').find('img').attr('src', 'https://localhost:43000/images/active-16.png')
 
                     var authTokenManager = this.authenticationService.authTokenManager;
@@ -294,9 +291,11 @@ class PomoTogglTimerGroup {
             success: (data: any, textStatus: string, jqXHR: JQueryXHR) => {
                 this.initializeForm();
                 this.updateCompletedTime();
+                clearInterval(this.timerInterval);
             },
             error: (data) => {
                 this.errorMessage(data.status, data.statusText);
+                clearInterval(this.timerInterval);
             }
         }
         $.ajax(settings);
