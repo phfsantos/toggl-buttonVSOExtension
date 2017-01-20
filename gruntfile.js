@@ -24,7 +24,6 @@ module.exports = function (grunt) {
                     sourceMap: true,
                     declaration: false,
                     watch: false,
-                    module: 'amd', 
                }
             },
         },
