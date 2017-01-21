@@ -98,9 +98,14 @@ router.delete('/discardTimer', function(req, res, next){
 router.post('/startTimer', function (req, res, next) {
     var toggl = new TogglClient({apiToken: req.body.apikey});
     var tags = req.body.tags || [""]
+    if(tags && tags.split){
+        tags = tags.split(",");
+    }else{
+        tags = "";
+    }
     toggl.startTimeEntry({
         "description": req.body.activityDescription,
-        "tags": tags.split(','),
+        "tags": tags,
         "pid": req.body.project,
         "created_with": "PomoToggl Timer"
     }, function(err, timeEntry) {
