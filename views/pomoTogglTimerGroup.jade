@@ -39,7 +39,7 @@ block scriptsBody
 				return _WorkItemServices.WorkItemFormService.getService();
 			}
 			getWorkItemFormService().then((WorkItemFormService)=>{
-				var pomoTogglTimerGroup = new PomoTogglTimerGroup(WorkItemFormService, AuthenticationService);
+				var pomoTogglTimerGroup = new PomoTogglTimerGroup(WorkItemFormService, AuthenticationService, Controls, StatusIndicator);
 				VSS.register("pomoTogglTimerGroup", pomoTogglTimerGroup);
 			});
 		});
@@ -54,21 +54,7 @@ block content
 			div(class='labelTitle') 
 				p Description
 			div
-				input(type='text' id='txtDescription' class='textBox')
-		
-		#project.section
-			div(class='labelTitle')
-				p Project
-			div
-				select(id='projectSelect' class='dropdownList')
-					option(value='')
-					
-		#tags.section
-			div(class='labelTitle')
-				p Tags
-			div
-				select(id='tagsSelect' class='dropdown chosen-select' multiple data-placeholder="Choose a tag...")
-					option(value='')			
+				p(id='txtDescription' class='textBox')
 				
 		#changeWIState.section
 			label
@@ -76,7 +62,8 @@ block content
 				= "Change Work Item to "
 				span#nextState nextState
 		
-		button(class='btn' id='btnStart') Start Timer
+		button(class='btn' id='btnStart') 
+			img(src="/images/inactive-16.png") Start Timer
 		
 		#error.section
 			span.error
@@ -86,6 +73,7 @@ block content
 				label#activeActivityTitle
 			p Timer:
 				label#activeActivityStartTime
-			button(class='btn' id='btnStop') Stop Timer
+			button(class='btn' id='btnStop') 
+				img(src="/images/active-16.png") Stop Timer
 			button(class='btn' id='btnDiscard') Discard
 			

@@ -1,6 +1,6 @@
 {
   "manifestVersion": 1,
-  "version": "1.0.3",
+  "version": "1.0.5",
   "name": "PomoToggl Timer",
   "id": "PomoTogglTimer",
   "description": "VSTS and toggl.com integration with builtin pomodoro",

@@ -9,9 +9,9 @@
  // <summary>All logic inside TogglButtonForm</summary>
  //---------------------------------------------------------------------
  
-/// <reference path='ref/jquery.d.ts' />
-/// <reference path='ref/VSS.d.ts' />
-/// <reference path='ref/chosen.d.ts' />
+/// <reference path='../ref/jquery.d.ts' />
+/// <reference path='../ref/VSS.d.ts' />
+/// <reference path='../ref/chosen.d.ts' />
 
 interface ITogglSettingsResponse {
     apikey: string;
@@ -63,3 +63,5 @@ class PomoTogglTimerSettings {
             $('#error').html('<p>Error ' + status + ': ' + message + '</p>')
     }
 }
+
+export default PomoTogglTimerSettings;

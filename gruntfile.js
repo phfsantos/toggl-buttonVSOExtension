@@ -8,23 +8,27 @@
  // </copyright>
  // <summary>grunt configuration file</summary>
  //---------------------------------------------------------------------
-
+var typescript = require('rollup-plugin-typescript');
 module.exports = function (grunt) {
-    grunt.loadNpmTasks('grunt-typescript');
+    grunt.loadNpmTasks('grunt-rollup');
     grunt.loadNpmTasks('grunt-shell');
 
     //require('load-grunt-tasks')(grunt); // npm install --save-dev load-grunt-tasks
 
-    grunt.initConfig({
-        typescript: {
-            base: {
-                src: ['scripts/*.ts'],
+    grunt.initConfig({    
+        rollup: {
+            options: {
+                plugins: [
+                    typescript({
+                        target: "es5",
+                        module: "es2015",
+                        moduleResolution: 'node',
+                    })
+                ]
+            },
+            files: {
                 dest: 'public/javascripts/vsotogglbutton.js',
-                options: {
-                    sourceMap: true,
-                    declaration: false,
-                    watch: false,
-               }
+                src: ['scripts/pomoToggleTimer.ts'],
             },
         },
         shell: {
@@ -33,7 +37,7 @@ module.exports = function (grunt) {
             },
         }
     });
-    grunt.registerTask('buildAndPublish', ['typescript:base', 'shell:publish']);
-    grunt.registerTask('build', ['typescript:base']);
+    grunt.registerTask('buildAndPublish', ['rollup', 'shell:publish']);
+    grunt.registerTask('build', ['rollup']);
     grunt.registerTask('publish', ['shell:publish']);
 };

@@ -10,6 +10,7 @@
  //---------------------------------------------------------------------
 
 var express = require('express');
+var TogglClient = require('toggl-api');
 var router = express.Router();
 
 router.get('/getUserData', function (req, res, next) {
@@ -95,52 +96,36 @@ router.delete('/discardTimer', function(req, res, next){
 
 
 router.post('/startTimer', function (req, res, next) {
-    if (req.method != 'POST'){
-        res.writeHead(405, {'Content-Type': 'text/plain'});
-        res.end();        
-    }
+    var toggl = new TogglClient({apiToken: req.body.apikey});
 
-    if (req.body.length > 1e6){
-        res.writeHead(413, {'Content-Type': 'text/plain'});
-    }
-    
-    var https = require('https');
-
-    var timeEntry = JSON.stringify({
-        "time_entry": {
-            "description": req.body.activityDescription,
-            "tags": req.body.tags.split(','),
-            "pid": req.body.project,
-            "created_with": "Visual Studio Team Services    "
-        }});
-    
-    var options = {
-        host: 'toggl.com',
-        path: '/api/v8/time_entries/start',
-        headers: {
-            'Authorization': 'Basic ' + new Buffer(req.body.apikey + ':api_token').toString('base64'),
-            'Content-Type': 'application/json'
-        },
-        method: 'POST'
-    };
-
-    var togglReq = https.request(options, function(response){
-        var str = '';
-        // console.log('inside callback');
-        
-        response.on('data', function(chunk){ 
-            str += chunk;
-            // console.log('data: ' + str);
-        });
-        
-        response.on('end', function(){
-           // console.log('End Request: ' + this.statusCode + ' - ' + this.statusMessage);
-           res.sendStatus(this.statusCode);
-        });
+    toggl.startTimeEntry({
+        "description": req.body.activityDescription,
+        "tags": req.body.tags.split(','),
+        "pid": req.body.project,
+        "created_with": "PomoToggl Timer"
+    }, function(err, timeEntry) {
+        // handle error
+        if (err) {
+            res.sendStatus(500);
+        } else {
+            res.sendStatus(200);
+        }
     });
-    
-    togglReq.write(timeEntry);
-    togglReq.end();
+});
+router.post('/createProject', function (req, res, next) {
+    var toggl = new TogglClient({apiToken: req.body.apikey});
+
+    toggl.createProject({
+        "name": req.body.projectName,
+        "created_with": "PomoToggl Timer"
+    }, function(err, projectData) {
+        // handle error
+        if (err) {
+            res.sendStatus(501);
+        } else {
+            res.send(projectData);
+        }
+    });
 });
 
 module.exports = router;
