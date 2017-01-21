@@ -18,23 +18,8 @@ block styles
 block scriptsBody
 	script(src='/javascripts/sdk/scripts/VSS.SDK.js')
 	script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
-	script(src='/javascripts/vsotogglbutton.js')
+	script(src='/javascripts/pomoTogglTimer.js')
 	script(src='/bower_components/chosen/chosen.jquery.min.js')
-	script(type='text/javascript').
-		VSS.init({
-			explicitNotifyLoaded: true,
-			usePlatformScripts: true,
-			usePlatformStyles: true
-		});
-
-		// Get the data service
-		//VSS.getService(VSS.ServiceIds.ExtensionData).then((dataService) => {
-		VSS.ready(() => {
-			var pomoTogglTimerSettings = new PomoTogglTimerSettings();
-			VSS.register("PomoTogglTimerSettings", pomoTogglTimerSettings);
-			VSS.notifyLoadSucceeded();
-		});
-		//});
 block content
 	#apiKey.section
 		div(class='labelTitle')

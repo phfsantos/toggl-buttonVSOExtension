@@ -1,3 +1,4 @@
+"use strict";
  //---------------------------------------------------------------------
  // <copyright file="gruntfile.js">
  //    This code is licensed under the MIT License.
@@ -9,6 +10,8 @@
  // <summary>grunt configuration file</summary>
  //---------------------------------------------------------------------
 var typescript = require('rollup-plugin-typescript');
+var sourcemaps = require('rollup-plugin-sourcemaps');
+
 module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-rollup');
     grunt.loadNpmTasks('grunt-shell');
@@ -23,11 +26,13 @@ module.exports = function (grunt) {
                         target: "es5",
                         module: "es2015",
                         moduleResolution: 'node',
-                    })
-                ]
+                    }),
+                    sourcemaps()
+                ],
+                sourceMap: true,
             },
             files: {
-                dest: 'public/javascripts/vsotogglbutton.js',
+                dest: 'public/javascripts/pomoTogglTimer.js',
                 src: ['scripts/pomoToggleTimer.ts'],
             },
         },

@@ -40,6 +40,7 @@ class PomoTogglTimerGroup {
     authenticationService: any;
     controls: any;
     statusIndicator: any;
+    dataService: any;
     webContext: any;
     togglApiTokenKey: string;
     timerInterval: number;
@@ -48,11 +49,12 @@ class PomoTogglTimerGroup {
     STATE_FIELD: string = "System.State";
     REASON_FIELD: string = "System.Reason";
 
-    constructor(WorkItemFormService: any, AuthenticationService: any, Controls: any, StatusIndicator: any) {
+    constructor(WorkItemFormService: any, AuthenticationService: any, Controls: any, StatusIndicator: any, dataService: any) {
         this.authenticationService = AuthenticationService;
         this.workItemFormService = WorkItemFormService;
         this.controls = Controls;
         this.statusIndicator = StatusIndicator;
+        this.dataService = dataService;
         this.webContext = VSS.getWebContext();
         this.togglApiTokenKey = this.webContext.user.uniqueName + "_togglAPIKey";
         this.initializeForm();

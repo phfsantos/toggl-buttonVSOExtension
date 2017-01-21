@@ -18,35 +18,8 @@ block styles
 block scriptsBody
 	script(src='/javascripts/sdk/scripts/VSS.SDK.js')
 	script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
-	script(src='/javascripts/vsotogglbutton.js')
-	script(src='/bower_components/chosen/chosen.jquery.min.js')
-	script(type='text/javascript').
-		VSS.init({
-			explicitNotifyLoaded: true,
-			usePlatformScripts: true,
-			usePlatformStyles: true
-		});
-
-		VSS.require([
-			"TFS/WorkItemTracking/Services",
-			"VSS/Authentication/Services",
-			"VSS/Controls",
-			"VSS/Controls/StatusIndicator"
-		], (_WorkItemServices, AuthenticationService, Controls, StatusIndicator) => {
-			// Get the WorkItemFormService.  This service allows you to get/set fields/links on the 'active' work item (the work item
-			// that currently is displayed in the UI).
-			function getWorkItemFormService() {
-				return _WorkItemServices.WorkItemFormService.getService();
-			}
-			getWorkItemFormService().then((WorkItemFormService)=>{
-				var pomoTogglTimerGroup = new PomoTogglTimerGroup(WorkItemFormService, AuthenticationService, Controls, StatusIndicator);
-				VSS.register("pomoTogglTimerGroup", pomoTogglTimerGroup);
-			});
-		});
-
-		VSS.ready(()=>{
-			VSS.notifyLoadSucceeded();
-		})
+	script(src='/javascripts/pomoTogglTimer.js')
+	script(src='/bower_components/chosen/chosen.jquery.min.js')		
 
 block content
 	#startTimer.section
