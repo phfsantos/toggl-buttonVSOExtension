@@ -62,6 +62,11 @@ option {
     margin-top: 10px;
 }
 
+.btn span {
+    vertical-align: top;
+    padding: 5px;
+}
+
 #startTimer {
     position:absolute;
     height: 100%;
