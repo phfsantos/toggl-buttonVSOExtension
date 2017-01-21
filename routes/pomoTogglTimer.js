@@ -106,7 +106,7 @@ router.post('/startTimer', function (req, res, next) {
     }, function(err, timeEntry) {
         // handle error
         if (err) {
-            res.sendStatus(500);
+            res.status(406).send(err, 500);
         } else {
             res.sendStatus(200);
         }
@@ -121,7 +121,7 @@ router.post('/createProject', function (req, res, next) {
     }, function(err, projectData) {
         // handle error
         if (err) {
-            res.sendStatus(501);
+            res.status(406).send(err);
         } else {
             res.send(projectData);
         }

@@ -58,13 +58,12 @@ var PomoTogglTimerGroup = (function () {
         $("#stopTimer").hide();
     };
     PomoTogglTimerGroup.prototype.fetchTogglInformations = function () {
-        var self = this;
+        var _this = this;
         $.ajax({
             url: "./pomoTogglTimer/getUserData",
             data: { apikey: this.apiKey },
             success: function (data) {
-                var _this = this;
-                self.errorMessage(null);
+                _this.errorMessage(null);
                 var currentTimer = null;
                 if (data.time_entries) {
                     currentTimer = data.time_entries.find(function (t) {
@@ -72,13 +71,13 @@ var PomoTogglTimerGroup = (function () {
                     });
                 }
                 if (currentTimer) {
-                    self.showCurrentTimer(currentTimer);
+                    _this.showCurrentTimer(currentTimer);
                 }
                 else {
-                    self.getDescriptionInfo();
-                    self.showInfosFromToggl();
+                    _this.getDescriptionInfo();
+                    _this.showInfosFromToggl();
                 }
-                this.workItemFormService.getFieldValues([
+                _this.workItemFormService.getFieldValues([
                     "System.TeamProject",
                     "System.Tags",
                 ]).then(function (fields) {
@@ -105,7 +104,7 @@ var PomoTogglTimerGroup = (function () {
                 });
             },
             error: function (data) {
-                self.errorMessage(data.status, data.statusText);
+                _this.errorMessage(data.status, data.statusText);
             }
         });
     };

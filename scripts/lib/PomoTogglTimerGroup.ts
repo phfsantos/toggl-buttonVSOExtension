@@ -94,12 +94,11 @@ class PomoTogglTimerGroup {
     }
 
     fetchTogglInformations() {
-        var self = this;
         $.ajax({
             url: "./pomoTogglTimer/getUserData",
             data: { apikey: this.apiKey },
-            success: function (data: any) {
-                self.errorMessage(null);
+            success: (data: any) => {
+                this.errorMessage(null);
                 var currentTimer = null;
 
                 if (data.time_entries) {
@@ -109,10 +108,10 @@ class PomoTogglTimerGroup {
                 }
 
                 if (currentTimer) {
-                    self.showCurrentTimer(currentTimer);
+                    this.showCurrentTimer(currentTimer);
                 } else {
-                    self.getDescriptionInfo();
-                    self.showInfosFromToggl();
+                    this.getDescriptionInfo();
+                    this.showInfosFromToggl();
                 }
 
                 this.workItemFormService.getFieldValues([
@@ -140,8 +139,8 @@ class PomoTogglTimerGroup {
                     console.log(this.tags);
                 });
             },
-            error: function (data: any) {
-                self.errorMessage(data.status, data.statusText);
+            error: (data: any) => {
+                this.errorMessage(data.status, data.statusText);
             }
         });
     };
