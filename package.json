@@ -22,7 +22,7 @@
     "grunt-rollup": "^1.0.1",
     "grunt-shell": "^2.1.0",
     "grunt-typescript": "^0.8.0",
-    "rollup-plugin-typescript": "^0.8.1",
+    "rollup-plugin-typescript": "^0.8.1"
   },
   "engines": {
     "node": "4.1.2"
