@@ -136,7 +136,7 @@ class PomoTogglTimerGroup {
                         });
                     }
                     console.log(projectName, togglProject);
-                    this.tags = fields["System.Tags"];
+                    this.tags = fields["System.Tags"] || [];
                     console.log(this.tags);
                 });
             },
