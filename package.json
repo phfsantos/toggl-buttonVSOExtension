@@ -25,6 +25,6 @@
     "rollup-plugin-typescript": "^0.8.1"
   },
   "engines": {
-    "node": "4.0.5"
+    "node": "6.9.4"
   }
 }
