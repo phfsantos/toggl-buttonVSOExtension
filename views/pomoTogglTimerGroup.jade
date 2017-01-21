@@ -22,19 +22,7 @@ block scriptsBody
 	script(src='/bower_components/chosen/chosen.jquery.min.js')		
 
 block content
-	#startTimer.section
-		#activityTitle.section
-			div(class='labelTitle') 
-				p Description
-			div
-				p(id='txtDescription' class='textBox')
-				
-		#changeWIState.section
-			label
-				input(type='checkbox' id='chkChangeState')
-				= "Change Work Item to "
-				span#nextState nextState
-		
+	#startTimer.section		
 		button(class='btn' id='btnStart')
 			img(src="/images/inactive-16.png") 
 			span Start Timer

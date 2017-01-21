@@ -33,6 +33,7 @@ interface ITogglOpts {
 
 class PomoTogglTimerGroup {
     apiKey: string = "";
+    title: string = "";
     pomodoriSize: number = 25;
     pomodoriBreak: number = 5;
     formChangedCallbacks: any[];
@@ -74,7 +75,7 @@ class PomoTogglTimerGroup {
             self.discardCurrentTimer();
         });
 
-        this.loadAPIKey().then(()=>{
+        this.loadAPIKey().then(() => {
             if (this.apiKey) {
                 this.fetchTogglInformations();
             } else {
@@ -110,7 +111,7 @@ class PomoTogglTimerGroup {
                 if (currentTimer) {
                     self.showCurrentTimer(currentTimer);
                 } else {
-                    self.fillDescriptionInfo();
+                    self.getDescriptionInfo();
                     self.showInfosFromToggl();
                 }
 
@@ -292,7 +293,7 @@ class PomoTogglTimerGroup {
     }
 
     loadAPIKey() {
-        this.dataService.getValue("apikey").then((currentKey) => {
+        return this.dataService.getValue("apikey").then((currentKey) => {
             return this.apiKey = currentKey;
         });
     }
@@ -307,17 +308,17 @@ class PomoTogglTimerGroup {
         }
     }
 
-    fillDescriptionInfo() {
+    getDescriptionInfo() {
         this.workItemFormService.getId().then((workItemID) => {
             this.workItemFormService.getFieldValue("System.Title").then((title) => {
-                $("#txtDescription").text(title + " (id: " + workItemID + ")");
+                this.title = title + " (id: " + workItemID + ")";
             });
         });
     }
 
     getFormInputs(): ITogglFormResponse {
         return {
-            activityDescription: $("#txtDescription").text(),
+            activityDescription: this.title,
             project: String(this.project),
             tags: this.tags,
             apikey: this.apiKey,

@@ -15,6 +15,7 @@ var Notification = window.Notification;
 var PomoTogglTimerGroup = (function () {
     function PomoTogglTimerGroup(WorkItemFormService, AuthenticationService, Controls, StatusIndicator, dataService) {
         this.apiKey = "";
+        this.title = "";
         this.pomodoriSize = 25;
         this.pomodoriBreak = 5;
         this.STATE_FIELD = "System.State";
@@ -74,7 +75,7 @@ var PomoTogglTimerGroup = (function () {
                     self.showCurrentTimer(currentTimer);
                 }
                 else {
-                    self.fillDescriptionInfo();
+                    self.getDescriptionInfo();
                     self.showInfosFromToggl();
                 }
                 this.workItemFormService.getFieldValues([
@@ -256,7 +257,7 @@ var PomoTogglTimerGroup = (function () {
     };
     PomoTogglTimerGroup.prototype.loadAPIKey = function () {
         var _this = this;
-        this.dataService.getValue("apikey").then(function (currentKey) {
+        return this.dataService.getValue("apikey").then(function (currentKey) {
             return _this.apiKey = currentKey;
         });
     };
@@ -269,17 +270,17 @@ var PomoTogglTimerGroup = (function () {
             $("#error").html("<p>Error " + status + ": " + message + "</p>");
         }
     };
-    PomoTogglTimerGroup.prototype.fillDescriptionInfo = function () {
+    PomoTogglTimerGroup.prototype.getDescriptionInfo = function () {
         var _this = this;
         this.workItemFormService.getId().then(function (workItemID) {
             _this.workItemFormService.getFieldValue("System.Title").then(function (title) {
-                $("#txtDescription").text(title + " (id: " + workItemID + ")");
+                _this.title = title + " (id: " + workItemID + ")";
             });
         });
     };
     PomoTogglTimerGroup.prototype.getFormInputs = function () {
         return {
-            activityDescription: $("#txtDescription").text(),
+            activityDescription: this.title,
             project: String(this.project),
             tags: this.tags,
             apikey: this.apiKey,
