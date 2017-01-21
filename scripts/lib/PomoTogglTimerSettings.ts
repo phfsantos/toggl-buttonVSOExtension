@@ -7,7 +7,7 @@
  //    PARTICULAR PURPOSE AND NONINFRINGEMENT.
  // </copyright>
  // <summary>All logic inside TogglButtonForm</summary>
- //---------------------------------------------------------------------
+ // ---------------------------------------------------------------------
  
 /// <reference path='../ref/jquery.d.ts' />
 /// <reference path='../ref/VSS.d.ts' />
@@ -21,46 +21,46 @@ interface ITogglSettingsResponse {
 class PomoTogglTimerSettings {
     webContext: any;
     dataService: any;
-    togglApiTokenKey: string;
     STATE_FIELD: string = "System.State";
     REASON_FIELD: string = "System.Reason";
 
     constructor(DataService: any) {
         this.dataService = DataService;
         this.webContext = VSS.getWebContext();
-        this.togglApiTokenKey = this.webContext.user.uniqueName + "_togglAPIKey";
         this.loadAPIKey();
         $("#btnSave").click(() => this.saveAPIKey());
     }
 
     saveAPIKey() {
-        var apiKey = $('#txtAPIKey').val();
+        var apiKey = $("#txtAPIKey").val();
 
         if (localStorage !== undefined) {
-            var userName = this.webContext.user.uniqueName;
-            var currentKey = localStorage.getItem(this.togglApiTokenKey);
-
-            if (currentKey === '' || currentKey != apiKey) {
-                localStorage.setItem(this.togglApiTokenKey, apiKey);
-            }
+            this.dataService.getValue("apikey").then((currentKey) => {
+                if (currentKey === "" || currentKey !== apiKey) {
+                    this.dataService.setValue("apikey", apiKey).then(() => {
+                        console.log("Set the api key");
+                    });
+                }
+            });
         }
     };
 
     loadAPIKey() {
-        if (localStorage !== undefined) {
-            var apiKey = localStorage.getItem(this.togglApiTokenKey);
-            if (apiKey)
-                $('#txtAPIKey').val(apiKey);
-        }
+        this.dataService.getValue("apikey").then((currentKey) => {
+            if (currentKey){
+                $("#txtAPIKey").val(currentKey);
+            }
+        });
     }
 
-    errorMessage(status: number = 200, message: string = '') {
-        var $errorDiv = $('#error');
+    errorMessage(status: number = 200, message: string = "") {
+        var $errorDiv = $("#error");
 
-        $errorDiv.html('');
+        $errorDiv.html("");
 
-        if (status != null && status != 200)
-            $('#error').html('<p>Error ' + status + ': ' + message + '</p>')
+        if (status != null && status !== 200) {
+            $("#error").html("<p>Error " + status + ": " + message + "</p>");
+        }
     }
 }
 

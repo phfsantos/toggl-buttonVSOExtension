@@ -56,7 +56,6 @@ class PomoTogglTimerGroup {
         this.statusIndicator = StatusIndicator;
         this.dataService = dataService;
         this.webContext = VSS.getWebContext();
-        this.togglApiTokenKey = this.webContext.user.uniqueName + "_togglAPIKey";
         this.initializeForm();
     }
 
@@ -75,13 +74,13 @@ class PomoTogglTimerGroup {
             self.discardCurrentTimer();
         });
 
-        this.loadAPIKey();
-
-        if (this.apiKey) {
-            this.fetchTogglInformations();
-        } else {
-            this.hideInfosFromToggl();
-        }
+        this.loadAPIKey().then(()=>{
+            if (this.apiKey) {
+                this.fetchTogglInformations();
+            } else {
+                this.hideInfosFromToggl();
+            }
+        });
     };
 
     hideInfosFromToggl() {
@@ -293,9 +292,9 @@ class PomoTogglTimerGroup {
     }
 
     loadAPIKey() {
-        if (localStorage !== undefined) {
-            this.apiKey = localStorage.getItem(this.togglApiTokenKey);
-        }
+        this.dataService.getValue("apikey").then((currentKey) => {
+            return this.apiKey = currentKey;
+        });
     }
 
     errorMessage(status: number = 200, message: string = "") {

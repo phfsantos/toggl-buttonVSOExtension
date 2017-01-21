@@ -32,13 +32,14 @@ VSS.require([
     });
 });
 
-// Get the data service
-VSS.getService(VSS.ServiceIds.ExtensionData).then((dataService) => {
-    var pomoTogglTimerSettings = new PomoTogglTimerSettings(dataService);
-    VSS.register("PomoTogglTimerSettings", pomoTogglTimerSettings);
-});
-
-// notify Loaded
+// ready
 VSS.ready(() => {
+    // get the data service
+    VSS.getService(VSS.ServiceIds.ExtensionData).then((dataService) => {
+        var pomoTogglTimerSettings = new PomoTogglTimerSettings(dataService);
+        VSS.register("PomoTogglTimerSettings", pomoTogglTimerSettings);
+    });
+
+    // notify loaded
     VSS.notifyLoadSucceeded();
 });
