@@ -103,6 +103,7 @@ class PomoTogglTimerGroup {
                         this.showCurrentTimer(currentTimer);
                     }
                 } else {
+                    this.clearCurrentTimer();
                     this.getDescriptionInfo();
                     this.showInfosFromToggl();
                 }
@@ -127,12 +128,11 @@ class PomoTogglTimerGroup {
                             }
                         });
                     }
-                    console.log(projectName, togglProject);
-                    this.tags = [""]
+
+                    this.tags = [""];
                     if (fields["System.Tags"]) {
                         this.tags = fields["System.Tags"].split(";");
                     };
-                    console.log(this.tags);
                 });
             },
             error: (data: any) => {
@@ -221,10 +221,7 @@ class PomoTogglTimerGroup {
     }
 
     showCurrentTimer(currentTimer: any) {
-        if (this.timerInterval) {
-            clearInterval(this.timerInterval);
-            this.timerInterval = null;
-        }
+        this.clearCurrentTimer();
         $("#startTimer").hide();
         $("#stopTimer").show();
         $("#activeActivityTitle").text(currentTimer.description);
@@ -251,7 +248,14 @@ class PomoTogglTimerGroup {
                 this.stopCurrentTimer();
             }
         }, 1000);
-    };
+    }
+
+    clearCurrentTimer() {
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+        }
+    }
 
     startTimer() {
         this.workItemFormService.getId().then((workItemID) => {
@@ -271,10 +275,7 @@ class PomoTogglTimerGroup {
     }
 
     stopCurrentTimer() {
-        if (this.timerInterval) {
-            clearInterval(this.timerInterval);
-            this.timerInterval = null;
-        }
+        this.clearCurrentTimer()
         let settings: JQueryAjaxSettings = {
             url: "./pomoTogglTimer/stopTimer",
             type: "PUT",

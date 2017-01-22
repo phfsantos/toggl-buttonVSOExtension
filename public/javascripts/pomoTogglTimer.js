@@ -70,6 +70,7 @@ var PomoTogglTimerGroup = (function () {
                     }
                 }
                 else {
+                    _this.clearCurrentTimer();
                     _this.getDescriptionInfo();
                     _this.showInfosFromToggl();
                 }
@@ -94,13 +95,11 @@ var PomoTogglTimerGroup = (function () {
                             }
                         });
                     }
-                    console.log(projectName, togglProject);
                     _this.tags = [""];
                     if (fields["System.Tags"]) {
                         _this.tags = fields["System.Tags"].split(";");
                     }
                     
-                    console.log(_this.tags);
                 });
             },
             error: function (data) {
@@ -189,10 +188,7 @@ var PomoTogglTimerGroup = (function () {
     };
     PomoTogglTimerGroup.prototype.showCurrentTimer = function (currentTimer) {
         var _this = this;
-        if (this.timerInterval) {
-            clearInterval(this.timerInterval);
-            this.timerInterval = null;
-        }
+        this.clearCurrentTimer();
         $("#startTimer").hide();
         $("#stopTimer").show();
         $("#activeActivityTitle").text(currentTimer.description);
@@ -218,7 +214,12 @@ var PomoTogglTimerGroup = (function () {
             }
         }, 1000);
     };
-    
+    PomoTogglTimerGroup.prototype.clearCurrentTimer = function () {
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+        }
+    };
     PomoTogglTimerGroup.prototype.startTimer = function () {
         var _this = this;
         this.workItemFormService.getId().then(function (workItemID) {
@@ -238,10 +239,7 @@ var PomoTogglTimerGroup = (function () {
     };
     PomoTogglTimerGroup.prototype.stopCurrentTimer = function () {
         var _this = this;
-        if (this.timerInterval) {
-            clearInterval(this.timerInterval);
-            this.timerInterval = null;
-        }
+        this.clearCurrentTimer();
         var settings = {
             url: "./pomoTogglTimer/stopTimer",
             type: "PUT",
