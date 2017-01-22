@@ -93,7 +93,11 @@ var PomoTogglTimerGroup = (function () {
                         });
                     }
                     console.log(projectName, togglProject);
-                    _this.tags = fields["System.Tags"] || [];
+                    _this.tags = [""];
+                    if (fields["System.Tags"]) {
+                        _this.tags = fields["System.Tags"].split(";");
+                    }
+                    
                     console.log(_this.tags);
                 });
             },
@@ -148,7 +152,12 @@ var PomoTogglTimerGroup = (function () {
             var authTokenManager = _this.authenticationService.authTokenManager;
             authTokenManager.getToken().then(function (token) {
                 var header = authTokenManager.getAuthorizationHeader(token);
-                $.ajaxSetup({ headers: { "Authorization": header } });
+                $.ajaxSetup({
+                    headers: {
+                        "Authorization": header,
+                    },
+                    accepts: "application/json; api-version=1.0;",
+                });
                 var postData = [{
                         "op": "add",
                         "path": "/fields/System.History",
@@ -193,7 +202,7 @@ var PomoTogglTimerGroup = (function () {
             milliseconds += 1000;
             var min = (milliseconds / 1000 / 60) << 0;
             var sec = (milliseconds / 1000) % 60;
-            var secZero = sec < 9 ? "0" : "";
+            var secZero = sec < 10 ? "0" : "";
             $("#activeActivityStartTime").text(min.toFixed(0) + ":" + secZero + sec.toFixed(0));
             if (min === _this.pomodoriSize) {
                 _this.notify("Take a break!", "You completed a pomodori. Take a five minutes break.");

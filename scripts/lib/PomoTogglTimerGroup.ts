@@ -126,7 +126,10 @@ class PomoTogglTimerGroup {
                         });
                     }
                     console.log(projectName, togglProject);
-                    this.tags = fields["System.Tags"] || [];
+                    this.tags = [""]
+                    if (fields["System.Tags"]) {
+                        this.tags = fields["System.Tags"].split(";");
+                    };
                     console.log(this.tags);
                 });
             },
@@ -179,7 +182,12 @@ class PomoTogglTimerGroup {
             var authTokenManager = this.authenticationService.authTokenManager;
             authTokenManager.getToken().then((token: string) => {
                 var header = authTokenManager.getAuthorizationHeader(token);
-                $.ajaxSetup({ headers: { "Authorization": header } });
+                $.ajaxSetup({
+                    headers: {
+                        "Authorization": header,
+                    },
+                    accepts: "application/json; api-version=1.0;",
+                });
 
                 var postData = [{
                     "op": "add",
@@ -226,7 +234,7 @@ class PomoTogglTimerGroup {
             milliseconds += 1000;
             let min = (milliseconds / 1000 / 60) << 0;
             let sec = (milliseconds / 1000) % 60;
-            let secZero = sec < 9 ? "0" : "";
+            let secZero = sec < 10 ? "0" : "";
             $("#activeActivityStartTime").text(`${min.toFixed(0)}:${secZero}${sec.toFixed(0)}`);
 
             if (min === this.pomodoriSize) {
