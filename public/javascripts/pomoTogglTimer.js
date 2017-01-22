@@ -91,7 +91,6 @@ var PomoTogglTimerGroup = (function () {
                             url: "./pomoTogglTimer/createProject",
                             data: { apikey: _this.apiKey, projectName },
                             success: function (p) {
-                                console.log("new project", p);
                                 _this.project = p.id;
                             }
                         });
@@ -210,12 +209,14 @@ var PomoTogglTimerGroup = (function () {
             if (min === _this.pomodoriSize) {
                 _this.pomodoriStreak++;
                 if (_this.pomodoriStreak === 4) {
-                    _this.pomodoriSize = 20;
+                    _this.pomodoriBreak = 20;
+                    // reset streak
+                    _this.pomodoriStreak = 0;
                 }
                 else {
-                    _this.pomodoriSize = 5;
+                    _this.pomodoriBreak = 5;
                 }
-                _this.notify("Take a break!", "You completed a pomodori. Take " + _this.pomodoriSize + " minutes break.");
+                _this.notify("Take a break!", "You completed a pomodori. Take " + _this.pomodoriBreak + " minutes break.");
                 _this.addPomodoriEntry();
                 _this.breakTime();
                 _this.stopCurrentTimer();
@@ -351,7 +352,7 @@ var PomoTogglTimerGroup = (function () {
         var container = $("#startTimer.section");
         var waitControlOptions = {
             cancellable: true,
-            cancelTextFormat: this.pomodoriSize + " minutes break! Click {here} to skip",
+            cancelTextFormat: this.pomodoriBreak + " minutes break! Click {here} to skip",
             cancelCallback: function () {
                 _this.startTimer();
             }
