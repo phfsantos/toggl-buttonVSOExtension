@@ -373,8 +373,7 @@ class PomoTogglTimerGroup {
         let container = $("#startTimer.section");
         let waitControlOptions = {
             cancellable: true,
-            cancelTextFormat: `Teke a five minutes break!
-{0} to skip`,
+            cancelTextFormat: `Five minutes break! {0} to skip`,
             cancelCallback: () => {
                 this.startTimer();
             }
@@ -382,7 +381,6 @@ class PomoTogglTimerGroup {
 
         var waitControl: any = this.controls.create(this.statusIndicator.WaitControl, container, waitControlOptions);
         waitControl.startWait();
-        alert("Break Time!"); // this may be too much.
 
         setTimeout(() => {
             this.notify("Break is over!", "It is time to get back to work.");

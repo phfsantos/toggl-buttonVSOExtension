@@ -97,11 +97,9 @@ router.delete('/discardTimer', function(req, res, next){
 
 router.post('/startTimer', function (req, res, next) {
     var toggl = new TogglClient({apiToken: req.body.apikey});
-    var tags = req.body.tags || [""]
-    if(tags && tags.split){
+    var tags = req.body.tags || [];
+    if(typeof tags === "string"){
         tags = tags.split(",");
-    }else{
-        tags = "";
     }
     toggl.startTimeEntry({
         "description": req.body.activityDescription,
