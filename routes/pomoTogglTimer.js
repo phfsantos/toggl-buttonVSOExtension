@@ -116,10 +116,10 @@ router.post('/startTimer', function (req, res, next) {
     });
 });
 router.get('/createProject', function (req, res, next) {
-    var toggl = new TogglClient({apiToken: req.body.apikey});
+    var toggl = new TogglClient({apiToken: req.query.apikey});
 
     toggl.createProject({
-        "name": req.body.projectName,
+        "name": req.query.projectName,
         "created_with": "PomoToggl Timer"
     }, function(err, projectData) {
         // handle error
