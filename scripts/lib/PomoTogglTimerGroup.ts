@@ -155,7 +155,8 @@ class PomoTogglTimerGroup {
                     let lastTimeEntry = data.time_entries.pop();
                     let hours = lastTimeEntry.duration / 60 / 60; // duration is in seconds
                     completedWork += hours;
-                    this.workItemFormService.setFieldValue(COMPLETED_WORK, completedWork).then((success) => {
+
+                    this.workItemFormService.setFieldValue(COMPLETED_WORK, Number(completedWork).toFixed(2)).then((success) => {
                         if (success) {
                             console.log("Updated completed time");
                         } else {
@@ -331,7 +332,6 @@ class PomoTogglTimerGroup {
             badge: "https://vso-toggl-pomo.azurewebsites.net/images/active-16.png",
             icon: "https://vso-toggl-pomo.azurewebsites.net/images/toggl_wide.png",
             vibrate: [200, 100, 200],
-            renotify: true,
             requireInteraction: true,
         };
         let notification: any;
