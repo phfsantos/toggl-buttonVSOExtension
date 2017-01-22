@@ -20,7 +20,6 @@ interface ITogglFormResponse {
     project: string;
     tags: any[];
     apikey: string;
-    nextState: string;
 }
 
 interface ITogglOpts {
@@ -34,6 +33,7 @@ interface ITogglOpts {
 class PomoTogglTimerGroup {
     apiKey: string = "";
     title: string = "";
+    currentTimerId: number;
     pomodoriSize: number = 25;
     pomodoriBreak: number = 5;
     formChangedCallbacks: any[];
@@ -217,7 +217,7 @@ class PomoTogglTimerGroup {
         let start = new Date(currentTimer.start);
         let now = new Date();
         let milliseconds = Math.abs(Number(start) - Number(now));
-        $("#activeActivityStartTime").attr("data-timeentryid", currentTimer.id);
+        this.currentTimerId = currentTimer.id;
         this.timerInterval = setInterval(() => {
             milliseconds += 1000;
             let min = (milliseconds / 1000 / 60) << 0;
@@ -235,6 +235,10 @@ class PomoTogglTimerGroup {
     };
 
     startTimer() {
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+        }
         this.workItemFormService.getId().then((workItemID) => {
             let result = this.getFormInputs();
             $.ajax({
@@ -252,11 +256,14 @@ class PomoTogglTimerGroup {
     }
 
     stopCurrentTimer() {
-        clearInterval(this.timerInterval);
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+        }
         let settings: JQueryAjaxSettings = {
             url: "./pomoTogglTimer/stopTimer",
-            type: "PUT",
-            data: { timeEntryId: $("#activeActivityStartTime").data("timeentryid"), apikey: this.apiKey },
+            type: "POST",
+            data: { timeEntryId: this.currentTimerId, apikey: this.apiKey },
             success: (data: any, textStatus: string, jqXHR: JQueryXHR) => {
                 this.initializeForm();
                 this.updateCompletedTime();
@@ -274,10 +281,14 @@ class PomoTogglTimerGroup {
             return;
         }
 
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+        }
         $.ajax({
             url: "./pomoTogglTimer/discardTimer",
-            type: "DELETE",
-            data: { timeEntryId: $("#activeActivityStartTime").data("timeentryid"), apikey: this.apiKey },
+            type: "POST",
+            data: { timeEntryId: this.currentTimerId, apikey: this.apiKey },
             success: (data: any) => {
                 this.initializeForm();
             },
@@ -316,8 +327,7 @@ class PomoTogglTimerGroup {
             activityDescription: this.title,
             project: String(this.project),
             tags: this.tags,
-            apikey: this.apiKey,
-            nextState: $("#chkChangeState").prop("checked") === false ? "" : $("#nextState").html()
+            apikey: this.apiKey
         };
     };
 

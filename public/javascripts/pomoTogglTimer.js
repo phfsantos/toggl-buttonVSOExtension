@@ -184,7 +184,7 @@ var PomoTogglTimerGroup = (function () {
         var start = new Date(currentTimer.start);
         var now = new Date();
         var milliseconds = Math.abs(Number(start) - Number(now));
-        $("#activeActivityStartTime").attr("data-timeentryid", currentTimer.id);
+        this.currentTimerId = currentTimer.id;
         this.timerInterval = setInterval(function () {
             milliseconds += 1000;
             var min = (milliseconds / 1000 / 60) << 0;
@@ -202,6 +202,10 @@ var PomoTogglTimerGroup = (function () {
     
     PomoTogglTimerGroup.prototype.startTimer = function () {
         var _this = this;
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+        }
         this.workItemFormService.getId().then(function (workItemID) {
             var result = _this.getFormInputs();
             $.ajax({
@@ -219,11 +223,14 @@ var PomoTogglTimerGroup = (function () {
     };
     PomoTogglTimerGroup.prototype.stopCurrentTimer = function () {
         var _this = this;
-        clearInterval(this.timerInterval);
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+        }
         var settings = {
             url: "./pomoTogglTimer/stopTimer",
-            type: "PUT",
-            data: { timeEntryId: $("#activeActivityStartTime").data("timeentryid"), apikey: this.apiKey },
+            type: "POST",
+            data: { timeEntryId: this.currentTimerId, apikey: this.apiKey },
             success: function (data, textStatus, jqXHR) {
                 _this.initializeForm();
                 _this.updateCompletedTime();
@@ -241,10 +248,14 @@ var PomoTogglTimerGroup = (function () {
         if (!confirm("Do you want to delete this running time entry?")) {
             return;
         }
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+        }
         $.ajax({
             url: "./pomoTogglTimer/discardTimer",
-            type: "DELETE",
-            data: { timeEntryId: $("#activeActivityStartTime").data("timeentryid"), apikey: this.apiKey },
+            type: "POST",
+            data: { timeEntryId: this.currentTimerId, apikey: this.apiKey },
             success: function (data) {
                 _this.initializeForm();
             },
@@ -281,8 +292,7 @@ var PomoTogglTimerGroup = (function () {
             activityDescription: this.title,
             project: String(this.project),
             tags: this.tags,
-            apikey: this.apiKey,
-            nextState: $("#chkChangeState").prop("checked") === false ? "" : $("#nextState").html()
+            apikey: this.apiKey
         };
     };
     
