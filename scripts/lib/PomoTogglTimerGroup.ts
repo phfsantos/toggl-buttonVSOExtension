@@ -185,8 +185,8 @@ class PomoTogglTimerGroup {
                 $.ajaxSetup({
                     headers: {
                         "Authorization": header,
+                        "Accept": "application/json; api-version=1.0;",
                     },
-                    accepts: "application/json; api-version=1.0;",
                 });
 
                 var postData = [{
