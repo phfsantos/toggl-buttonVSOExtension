@@ -30,16 +30,10 @@ var PomoTogglTimerGroup = (function () {
     }
     PomoTogglTimerGroup.prototype.initializeForm = function () {
         var _this = this;
-        var self = this;
-        $("#btnStop").click(function () {
-            self.stopCurrentTimer();
-        });
-        $("#btnStart").click(function () {
-            self.startTimer();
-        });
-        $("#btnDiscard").click(function () {
-            self.discardCurrentTimer();
-        });
+        // init buttons
+        $("#btnStop").off().click(function () { return _this.stopCurrentTimer(); });
+        $("#btnStart").off().click(function () { return _this.startTimer(); });
+        $("#btnDiscard").off().click(function () { return _this.discardCurrentTimer(); });
         this.loadAPIKey().then(function () {
             if (_this.apiKey) {
                 _this.fetchTogglInformations();
@@ -140,7 +134,48 @@ var PomoTogglTimerGroup = (function () {
             }
         });
     };
-    
+    PomoTogglTimerGroup.prototype.addPomodoryEntry = function () {
+        var _this = this;
+        this.dataService.getValue("pomodories").then(function (pomodories) {
+            pomodories = pomodories ? pomodories : 0;
+            return _this.dataService.setValue("pomodories", ++pomodories);
+        });
+        this.workItemFormService.getId().then(function (workItemID) {
+            _this.dataService.getValue(workItemID + "-pomodories").then(function (pomodories) {
+                pomodories = pomodories ? pomodories : 0;
+                return _this.dataService.setValue(workItemID + "-pomodories", ++pomodories);
+            });
+            var authTokenManager = _this.authenticationService.authTokenManager;
+            authTokenManager.getToken().then(function (token) {
+                var header = authTokenManager.getAuthorizationHeader(token);
+                $.ajaxSetup({ headers: { "Authorization": header } });
+                var postData = [{
+                        "op": "add",
+                        "path": "/fields/System.History",
+                        "value": "Completed a pomodori"
+                    }];
+                _this.workItemFormService.getWorkItemResourceUrl(workItemID).then(function (apiURI) {
+                    // var apiURI = this.webContext.collection.uri + "_apis/wit/workitems/" + workItemID + "?api-version=1.0";
+                    $.ajax({
+                        type: "PATCH",
+                        url: apiURI,
+                        contentType: "application/json-patch+json",
+                        data: JSON.stringify(postData),
+                        success: function () {
+                            if (console) {
+                                console.log("History updated successful");
+                            }
+                        },
+                        error: function (error) {
+                            if (console) {
+                                console.log("Error " + error.status + ": " + error.statusText);
+                            }
+                        }
+                    });
+                });
+            });
+        });
+    };
     PomoTogglTimerGroup.prototype.showCurrentTimer = function (currentTimer) {
         var _this = this;
         $("#startTimer").hide();
@@ -160,6 +195,7 @@ var PomoTogglTimerGroup = (function () {
                 _this.notify("Take a break!", "You completed a pomodori. Take a five minutes break.");
                 _this.stopCurrentTimer();
                 _this.breakTime();
+                _this.addPomodoryEntry();
             }
         }, 1000);
     };
@@ -174,43 +210,6 @@ var PomoTogglTimerGroup = (function () {
                 data: result,
                 success: function (data) {
                     _this.fetchTogglInformations();
-                    $("li[command=\"TogglButton\"]").find("img").attr("src", "https://localhost:43000/images/active-16.png");
-                    var authTokenManager = _this.authenticationService.authTokenManager;
-                    authTokenManager.getToken().then(function (token) {
-                        var header = authTokenManager.getAuthorizationHeader(token);
-                        $.ajaxSetup({ headers: { "Authorization": header } });
-                        var postData = [{
-                                "op": "add",
-                                "path": "/fields/System.History",
-                                "value": "Toggl.com timer started"
-                            }];
-                        if (result.nextState) {
-                            postData = postData.concat([{
-                                    "op": "add",
-                                    "path": "/fields/System.State",
-                                    "value": result.nextState
-                                }]);
-                        }
-                        this.workItemFormService.getWorkItemResourceUrl(workItemID).then(function (apiURI) {
-                            // var apiURI = this.webContext.collection.uri + "_apis/wit/workitems/" + workItemID + "?api-version=1.0";
-                            $.ajax({
-                                type: "PATCH",
-                                url: apiURI,
-                                contentType: "application/json-patch+json",
-                                data: JSON.stringify(postData),
-                                success: function () {
-                                    if (console) {
-                                        console.log("History updated successful");
-                                    }
-                                },
-                                error: function (error) {
-                                    if (console) {
-                                        console.log("Error " + error.status + ": " + error.statusText);
-                                    }
-                                }
-                            });
-                        });
-                    });
                 },
                 error: function (err) {
                     alert("Not possible to start the timer. Error " + err.status + ": " + err.statusText);
@@ -321,13 +320,14 @@ var PomoTogglTimerGroup = (function () {
         var container = $("#startTimer.section");
         var waitControlOptions = {
             cancellable: true,
-            cancelTextFormat: "{0} to cancel",
+            cancelTextFormat: "Teke a five minutes break!\n{0} to skip",
             cancelCallback: function () {
                 _this.startTimer();
             }
         };
         var waitControl = this.controls.create(this.statusIndicator.WaitControl, container, waitControlOptions);
         waitControl.startWait();
+        alert("Break Time!"); // this may be too much.
         setTimeout(function () {
             _this.notify("Break is over!", "It is time to get back to work.");
             waitControl.endWait();
