@@ -240,7 +240,7 @@ class PomoTogglTimerGroup {
             $("#activeActivityStartTime").text(`${min.toFixed(0)}:${secZero}${sec.toFixed(0)}`);
 
             // check if the timer is still on Toggl
-            if (sec % 10) {
+            if (sec % 20 === 0) {
                 this.fetchTogglInformations();
             }
 
