@@ -99,7 +99,9 @@ class PomoTogglTimerGroup {
                 }
 
                 if (currentTimer) {
-                    this.showCurrentTimer(currentTimer);
+                    if (this.currentTimerId !== currentTimer.id) {
+                        this.showCurrentTimer(currentTimer);
+                    }
                 } else {
                     this.getDescriptionInfo();
                     this.showInfosFromToggl();
@@ -236,6 +238,11 @@ class PomoTogglTimerGroup {
             let sec = (milliseconds / 1000) % 60;
             let secZero = sec < 10 ? "0" : "";
             $("#activeActivityStartTime").text(`${min.toFixed(0)}:${secZero}${sec.toFixed(0)}`);
+
+            // check if the timer is still on Toggl
+            if (sec % 10) {
+                this.fetchTogglInformations();
+            }
 
             if (min === this.pomodoriSize) {
                 this.notify("Take a break!", "You completed a pomodori. Take a five minutes break.");

@@ -65,7 +65,9 @@ var PomoTogglTimerGroup = (function () {
                     });
                 }
                 if (currentTimer) {
-                    _this.showCurrentTimer(currentTimer);
+                    if (_this.currentTimerId !== currentTimer.id) {
+                        _this.showCurrentTimer(currentTimer);
+                    }
                 }
                 else {
                     _this.getDescriptionInfo();
@@ -204,6 +206,10 @@ var PomoTogglTimerGroup = (function () {
             var sec = (milliseconds / 1000) % 60;
             var secZero = sec < 10 ? "0" : "";
             $("#activeActivityStartTime").text(min.toFixed(0) + ":" + secZero + sec.toFixed(0));
+            // check if the timer is still on Toggl
+            if (sec % 10) {
+                _this.fetchTogglInformations();
+            }
             if (min === _this.pomodoriSize) {
                 _this.notify("Take a break!", "You completed a pomodori. Take a five minutes break.");
                 _this.addPomodoriEntry();
