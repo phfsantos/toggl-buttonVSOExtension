@@ -79,6 +79,13 @@ option {
     height: 100%;  
     display: none;
 }
+    #timer {
+        text-align: center;
+    }
+        #activeActivityStartTime {
+            font-size: 36px;
+            vertical-align: top;
+        }
 
 #changeWIState{
     display: none;

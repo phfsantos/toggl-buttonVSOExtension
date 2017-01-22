@@ -24,19 +24,17 @@ block scriptsBody
 block content
 	#startTimer.section		
 		button(class='btn' id='btnStart')
-			img(src="/images/inactive-16.png") 
+			img(src="/images/active-16.png") 
 			span Start Timer
 		
 		#error.section
 			span.error
 	#stopTimer.section
 		div(class='stopDiv')
-			p Active Timer:
-				label#activeActivityTitle
-			p Timer:
+			p(#timer)
 				label#activeActivityStartTime
 			button(class='btn' id='btnStop') 
-				img(src="/images/active-16.png") 
+				img(src="/images/inactive-16.png") 
 				span Stop Timer
 			button(class='btn' id='btnDiscard') Discard
 			

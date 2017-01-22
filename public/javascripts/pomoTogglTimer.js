@@ -134,7 +134,7 @@ var PomoTogglTimerGroup = (function () {
             }
         });
     };
-    PomoTogglTimerGroup.prototype.addPomodoryEntry = function () {
+    PomoTogglTimerGroup.prototype.addPomodoriEntry = function () {
         var _this = this;
         this.dataService.getValue("pomodories").then(function (pomodories) {
             pomodories = pomodories ? pomodories : 0;
@@ -197,9 +197,9 @@ var PomoTogglTimerGroup = (function () {
             $("#activeActivityStartTime").text(min.toFixed(0) + ":" + secZero + sec.toFixed(0));
             if (min === _this.pomodoriSize) {
                 _this.notify("Take a break!", "You completed a pomodori. Take a five minutes break.");
-                _this.stopCurrentTimer();
+                _this.addPomodoriEntry();
                 _this.breakTime();
-                _this.addPomodoryEntry();
+                _this.stopCurrentTimer();
             }
         }, 1000);
     };

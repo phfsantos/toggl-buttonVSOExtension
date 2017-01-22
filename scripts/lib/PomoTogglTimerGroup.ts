@@ -166,7 +166,7 @@ class PomoTogglTimerGroup {
         });
     }
 
-    addPomodoryEntry() {
+    addPomodoriEntry() {
         this.dataService.getValue("pomodories").then((pomodories) => {
             pomodories = pomodories? pomodories : 0;
             return this.dataService.setValue("pomodories", ++pomodories);
@@ -231,9 +231,9 @@ class PomoTogglTimerGroup {
 
             if (min === this.pomodoriSize) {
                 this.notify("Take a break!", "You completed a pomodori. Take a five minutes break.");
-                this.stopCurrentTimer();
+                this.addPomodoriEntry();
                 this.breakTime();
-                this.addPomodoryEntry();
+                this.stopCurrentTimer();
             }
         }, 1000);
     };
