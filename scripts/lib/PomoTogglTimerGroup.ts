@@ -36,6 +36,7 @@ class PomoTogglTimerGroup {
     currentTimerId: number;
     pomodoriSize: number = 25;
     pomodoriBreak: number = 5;
+    pomodoriStreak: number = 0;
     formChangedCallbacks: any[];
     workItemFormService: any;
     authenticationService: any;
@@ -123,7 +124,6 @@ class PomoTogglTimerGroup {
                             url: "./pomoTogglTimer/createProject",
                             data: { apikey: this.apiKey, projectName },
                             success: (p) => {
-                                console.log("new project", p);
                                 this.project = p.id;
                             }
                         });
@@ -242,7 +242,15 @@ class PomoTogglTimerGroup {
             }
 
             if (min === this.pomodoriSize) {
-                this.notify("Take a break!", "You completed a pomodori. Take a five minutes break.");
+                this.pomodoriStreak++;
+                if (this.pomodoriStreak === 4) {
+                    this.pomodoriBreak = 20;
+                    // reset streak
+                    this.pomodoriStreak = 0;
+                } else {
+                    this.pomodoriBreak = 5;
+                }
+                this.notify("Take a break!", `You completed a pomodori. Take ${this.pomodoriBreak} minutes break.`);
                 this.addPomodoriEntry();
                 this.breakTime();
                 this.stopCurrentTimer();
@@ -381,7 +389,7 @@ class PomoTogglTimerGroup {
         let container = $("#startTimer.section");
         let waitControlOptions = {
             cancellable: true,
-            cancelTextFormat: `Five minutes break! {0} to skip`,
+            cancelTextFormat: `${this.pomodoriBreak} minutes break! Click {here} to skip`,
             cancelCallback: () => {
                 this.startTimer();
             }
