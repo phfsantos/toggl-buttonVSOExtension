@@ -178,6 +178,10 @@ var PomoTogglTimerGroup = (function () {
     };
     PomoTogglTimerGroup.prototype.showCurrentTimer = function (currentTimer) {
         var _this = this;
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+        }
         $("#startTimer").hide();
         $("#stopTimer").show();
         $("#activeActivityTitle").text(currentTimer.description);
@@ -202,10 +206,6 @@ var PomoTogglTimerGroup = (function () {
     
     PomoTogglTimerGroup.prototype.startTimer = function () {
         var _this = this;
-        if (this.timerInterval) {
-            clearInterval(this.timerInterval);
-            this.timerInterval = null;
-        }
         this.workItemFormService.getId().then(function (workItemID) {
             var result = _this.getFormInputs();
             $.ajax({
@@ -229,7 +229,7 @@ var PomoTogglTimerGroup = (function () {
         }
         var settings = {
             url: "./pomoTogglTimer/stopTimer",
-            type: "POST",
+            type: "PUT",
             data: { timeEntryId: this.currentTimerId, apikey: this.apiKey },
             success: function (data, textStatus, jqXHR) {
                 _this.initializeForm();
@@ -254,7 +254,7 @@ var PomoTogglTimerGroup = (function () {
         }
         $.ajax({
             url: "./pomoTogglTimer/discardTimer",
-            type: "POST",
+            type: "DELETE",
             data: { timeEntryId: this.currentTimerId, apikey: this.apiKey },
             success: function (data) {
                 _this.initializeForm();
