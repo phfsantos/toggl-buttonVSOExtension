@@ -66,7 +66,7 @@ var PomoTogglTimerGroup = (function () {
                     });
                 }
                 if (data.workspaces.length) {
-                    _this.workspaceId = _this.workspaceId[0].id;
+                    _this.workspaceId = data.workspaces[0].id;
                 }
                 if (currentTimer) {
                     if (_this.currentTimerId !== currentTimer.id) {

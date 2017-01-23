@@ -101,7 +101,7 @@ class PomoTogglTimerGroup {
                 }
 
                 if (data.workspaces.length) {
-                    this.workspaceId = this.workspaceId[0].id;
+                    this.workspaceId = data.workspaces[0].id;
                 }
 
                 if (currentTimer) {
