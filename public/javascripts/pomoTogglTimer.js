@@ -65,6 +65,9 @@ var PomoTogglTimerGroup = (function () {
                         return t.duration < 0;
                     });
                 }
+                if (data.workspaces.length) {
+                    _this.workspaceId = _this.workspaceId[0].id;
+                }
                 if (currentTimer) {
                     if (_this.currentTimerId !== currentTimer.id) {
                         _this.showCurrentTimer(currentTimer);
@@ -89,7 +92,7 @@ var PomoTogglTimerGroup = (function () {
                     else {
                         $.ajax({
                             url: "./pomoTogglTimer/createProject",
-                            data: { apikey: _this.apiKey, projectName },
+                            data: { apikey: _this.apiKey, projectName, workspaceId: _this.workspaceId },
                             success: function (p) {
                                 _this.project = p.id;
                             }

@@ -120,6 +120,7 @@ router.get('/createProject', function (req, res, next) {
 
     toggl.createProject({
         "name": req.query.projectName,
+        "wid": req.query.workspaceId,
         "created_with": "PomoToggl Timer"
     }, function(err, projectData) {
         // handle error

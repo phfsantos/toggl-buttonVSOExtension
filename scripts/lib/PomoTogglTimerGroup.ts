@@ -34,6 +34,7 @@ class PomoTogglTimerGroup {
     apiKey: string = "";
     title: string = "";
     currentTimerId: number;
+    workspaceId: number;
     pomodoriSize: number = 25;
     pomodoriBreak: number = 5;
     pomodoriStreak: number = 0;
@@ -99,6 +100,10 @@ class PomoTogglTimerGroup {
                     });
                 }
 
+                if (data.workspaces.length) {
+                    this.workspaceId = this.workspaceId[0].id;
+                }
+
                 if (currentTimer) {
                     if (this.currentTimerId !== currentTimer.id) {
                         this.showCurrentTimer(currentTimer);
@@ -122,7 +127,7 @@ class PomoTogglTimerGroup {
                     } else {
                         $.ajax({
                             url: "./pomoTogglTimer/createProject",
-                            data: { apikey: this.apiKey, projectName },
+                            data: { apikey: this.apiKey, projectName, workspaceId: this.workspaceId  },
                             success: (p) => {
                                 this.project = p.id;
                             }
