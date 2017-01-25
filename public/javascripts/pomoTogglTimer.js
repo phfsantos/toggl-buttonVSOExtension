@@ -355,7 +355,7 @@ var PomoTogglTimerGroup = (function () {
         var container = $("#startTimer.section");
         var waitControlOptions = {
             cancellable: true,
-            cancelTextFormat: this.pomodoriBreak + " minutes break! Click {here} to skip",
+            cancelTextFormat: this.pomodoriBreak + " minutes break! {0} to skip",
             cancelCallback: function () {
                 _this.startTimer();
             }
