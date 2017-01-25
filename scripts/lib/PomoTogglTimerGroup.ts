@@ -367,6 +367,7 @@ class PomoTogglTimerGroup {
             icon: "https://vso-toggl-pomo.azurewebsites.net/images/toggl_wide.png",
             vibrate: [200, 100, 200],
             requireInteraction: true,
+            sound: "/sounds/job-done.mp3"
         };
         let notification: any;
 
@@ -384,6 +385,11 @@ class PomoTogglTimerGroup {
                 }
             });
         }
+
+        notification.onclick = function(){
+            window.focus();
+            this.cancel();
+        };
 
         // finally, if the user has denied notifications and you 
         // want to be respectful there is no need to bother them any more.
