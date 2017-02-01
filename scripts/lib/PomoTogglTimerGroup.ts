@@ -388,7 +388,7 @@ class PomoTogglTimerGroup {
 
         notification.onclick = function(){
             window.focus();
-            this.cancel();
+            this.close();
         };
 
         // finally, if the user has denied notifications and you 
