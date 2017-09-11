@@ -308,7 +308,7 @@ var PomoTogglTimerGroup = (function () {
         var _this = this;
         this.workItemFormService.getId().then(function (workItemID) {
             _this.workItemFormService.getFieldValue("System.Title").then(function (title) {
-                _this.title = title + " (id: " + workItemID + ")";
+                _this.title = workItemID + " - " + title;
             });
         });
     };
@@ -461,5 +461,3 @@ VSS.ready(function () {
     // notify loaded
     VSS.notifyLoadSucceeded();
 });
-
-//# sourceMappingURL=pomoTogglTimer.js.map

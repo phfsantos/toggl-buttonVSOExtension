@@ -29,7 +29,7 @@ module.exports = function (grunt) {
                     }),
                     sourcemaps()
                 ],
-                sourceMap: true,
+                sourcemap: true,
             },
             files: {
                 dest: 'public/javascripts/pomoTogglTimer.js',

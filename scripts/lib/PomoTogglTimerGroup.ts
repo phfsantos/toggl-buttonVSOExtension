@@ -346,7 +346,7 @@ class PomoTogglTimerGroup {
     getDescriptionInfo() {
         this.workItemFormService.getId().then((workItemID) => {
             this.workItemFormService.getFieldValue("System.Title").then((title) => {
-                this.title = title + " (id: " + workItemID + ")";
+                this.title = workItemID + " - " + title;
             });
         });
     }
