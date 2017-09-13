@@ -363,7 +363,7 @@ class PomoTogglTimerGroup {
     };
 
     notify(title: string, body: string, thenDo: () => void, cancel?: () => void) {
-        this.dialogs.show(this.dialogs.ModalDialog, {
+        const dialog = this.dialogs.show(this.dialogs.ModalDialog, {
             title,
             contentText: body,
             resizable: false,
@@ -376,14 +376,14 @@ class PomoTogglTimerGroup {
                   icon: "ui-icon-check",
                   click: () => {
                       thenDo();
-                      this.dialogs.close();
+                      dialog.close();
                   }
                 },
                 {
                     text: "Cancel",
                     icon: "ui-icon-cancel",
                     click: () => {
-                        this.dialogs.close();
+                        dialog.close();
                     }
                 }
             ],
