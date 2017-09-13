@@ -162,6 +162,7 @@ class PomoTogglTimerGroup {
                     this.workItemFormService.setFieldValue(COMPLETED_WORK, Number(completedWork).toFixed(2)).then((success) => {
                         if (success) {
                             console.log("Updated completed time");
+                            this.workItemFormService.save();
                         } else {
                             console.log("could not update");
                         }
@@ -363,13 +364,14 @@ class PomoTogglTimerGroup {
 
     notify(title: string, body: string, thenDo: () => void, cancel?: () => void) {
         this.dialogs.show(this.dialogs.ModalDialog, {
-            okText: "ok",
             okCallback: thenDo,
             cancelCallback: cancel,
             title,
             contentText: body,
             resizable: false,
             hideCloseButton: true,
+            width: "100%",
+            height: "100%",
         });
     }
 
