@@ -11,9 +11,8 @@
 /// <reference path='../ref/jquery.d.ts' />
 /// <reference path='../ref/VSS.d.ts' />
 /// <reference path='../ref/chosen.d.ts' />
-var Notification = window.Notification;
 var PomoTogglTimerGroup = (function () {
-    function PomoTogglTimerGroup(WorkItemFormService, AuthenticationService, Controls, StatusIndicator, dataService) {
+    function PomoTogglTimerGroup(WorkItemFormService, AuthenticationService, Controls, StatusIndicator, dataService, Dialogs) {
         this.apiKey = "";
         this.title = "";
         this.pomodoriSize = 25;
@@ -26,6 +25,7 @@ var PomoTogglTimerGroup = (function () {
         this.controls = Controls;
         this.statusIndicator = StatusIndicator;
         this.dataService = dataService;
+        this.dialogs = Dialogs;
         this.webContext = VSS.getWebContext();
         this.initializeForm();
     }
@@ -37,7 +37,7 @@ var PomoTogglTimerGroup = (function () {
         $("#btnDiscard").off().click(function () { return _this.discardCurrentTimer(); });
         this.loadAPIKey().then(function () {
             if (_this.apiKey) {
-                _this.fetchTogglInformations();
+                _this.fetchTogglInformation();
             }
             else {
                 _this.hideInfosFromToggl();
@@ -52,7 +52,7 @@ var PomoTogglTimerGroup = (function () {
         $("#startTimer").show();
         $("#stopTimer").hide();
     };
-    PomoTogglTimerGroup.prototype.fetchTogglInformations = function () {
+    PomoTogglTimerGroup.prototype.fetchTogglInformation = function () {
         var _this = this;
         $.ajax({
             url: "./pomoTogglTimer/getUserData",
@@ -204,10 +204,10 @@ var PomoTogglTimerGroup = (function () {
             var min = (milliseconds / 1000 / 60) << 0;
             var sec = (milliseconds / 1000) % 60;
             var secZero = sec < 10 ? "0" : "";
-            $("#activeActivityStartTime").text(min.toFixed(0) + ":" + secZero + sec.toFixed(0));
+            $("#activeActivityStartTime").text(min.toFixed(0) + ":" + secZero + parseInt(String(sec), 10));
             // check if the timer is still on Toggl
             if (sec % 20 === 0) {
-                _this.fetchTogglInformations();
+                _this.fetchTogglInformation();
             }
             if (min === _this.pomodoriSize) {
                 _this.pomodoriStreak++;
@@ -219,10 +219,10 @@ var PomoTogglTimerGroup = (function () {
                 else {
                     _this.pomodoriBreak = 5;
                 }
-                _this.notify("Take a break!", "You completed a pomodori. Take " + _this.pomodoriBreak + " minutes break.");
                 _this.addPomodoriEntry();
                 _this.breakTime();
                 _this.stopCurrentTimer();
+                _this.notify("Take a break!", "You completed a pomodori. Take " + _this.pomodoriBreak + " minutes break.");
             }
         }, 1000);
     };
@@ -241,7 +241,7 @@ var PomoTogglTimerGroup = (function () {
                 type: "POST",
                 data: result,
                 success: function (data) {
-                    _this.fetchTogglInformations();
+                    _this.fetchTogglInformation();
                 },
                 error: function (err) {
                     alert("Not possible to start the timer. Error " + err.status + ": " + err.statusText);
@@ -322,38 +322,11 @@ var PomoTogglTimerGroup = (function () {
     };
     
     PomoTogglTimerGroup.prototype.notify = function (title, body) {
-        var options = {
-            body,
-            badge: "https://vso-toggl-pomo.azurewebsites.net/images/active-16.png",
-            icon: "https://vso-toggl-pomo.azurewebsites.net/images/toggl_wide.png",
-            vibrate: [200, 100, 200],
-            requireInteraction: true,
-            sound: "/sounds/job-done.mp3"
-        };
-        var notification;
-        // let's check if the browser supports notifications
-        if (!("Notification" in window)) {
-            return false;
-        }
-        else if (Notification.permission === "granted") {
-            // if it's okay let's create a notification
-            notification = new Notification(title, options);
-        }
-        else if (Notification.permission !== "denied") {
-            Notification.requestPermission(function (permission) {
-                // if the user accepts, let's create a notification
-                if (permission === "granted") {
-                    notification = new Notification(title, options);
-                }
-            });
-        }
-        notification.onclick = function () {
-            window.focus();
-            this.close();
-        };
-        // finally, if the user has denied notifications and you 
-        // want to be respectful there is no need to bother them any more.
-        return notification;
+        this.dialogs.show(this.dialogs.ModalDialog, {
+            okText: "ok",
+            title,
+            contentText: body,
+        });
     };
     PomoTogglTimerGroup.prototype.breakTime = function () {
         var _this = this;
@@ -436,8 +409,9 @@ VSS.require([
     "TFS/WorkItemTracking/Services",
     "VSS/Authentication/Services",
     "VSS/Controls",
-    "VSS/Controls/StatusIndicator"
-], function (_WorkItemServices, AuthenticationService, Controls, StatusIndicator) {
+    "VSS/Controls/StatusIndicator",
+    "VSS/Controls/Dialogs"
+], function (_WorkItemServices, AuthenticationService, Controls, StatusIndicator, Dialogs) {
     // get the WorkItemFormService. 
     // this service allows you to get/set fields/links on the 'active' work item (the work item
     // that currently is displayed in the UI).
@@ -446,7 +420,7 @@ VSS.require([
     }
     getWorkItemFormService().then(function (WorkItemFormService) {
         VSS.getService(VSS.ServiceIds.ExtensionData).then(function (dataService) {
-            var pomoTogglTimerGroup = new PomoTogglTimerGroup(WorkItemFormService, AuthenticationService, Controls, StatusIndicator, dataService);
+            var pomoTogglTimerGroup = new PomoTogglTimerGroup(WorkItemFormService, AuthenticationService, Controls, StatusIndicator, dataService, Dialogs);
             VSS.register("pomoTogglTimerGroup", pomoTogglTimerGroup);
         });
     });

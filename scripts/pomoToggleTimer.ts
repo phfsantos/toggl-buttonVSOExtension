@@ -11,8 +11,9 @@ VSS.require([
     "TFS/WorkItemTracking/Services",
     "VSS/Authentication/Services",
     "VSS/Controls",
-    "VSS/Controls/StatusIndicator"
-], (_WorkItemServices, AuthenticationService, Controls, StatusIndicator) => {
+    "VSS/Controls/StatusIndicator",
+    "VSS/Controls/Dialogs"
+    ], (_WorkItemServices, AuthenticationService, Controls, StatusIndicator, Dialogs) => {
     // get the WorkItemFormService. 
     // this service allows you to get/set fields/links on the 'active' work item (the work item
     // that currently is displayed in the UI).
@@ -26,7 +27,8 @@ VSS.require([
                                                               AuthenticationService,
                                                               Controls,
                                                               StatusIndicator,
-                                                              dataService);
+                                                              dataService,
+                                                              Dialogs);
             VSS.register("pomoTogglTimerGroup", pomoTogglTimerGroup);
         });
     });

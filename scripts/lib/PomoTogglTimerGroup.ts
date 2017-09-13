@@ -42,6 +42,7 @@ class PomoTogglTimerGroup {
     workItemFormService: any;
     authenticationService: any;
     controls: any;
+    dialogs: any;
     statusIndicator: any;
     dataService: any;
     webContext: any;
@@ -52,12 +53,13 @@ class PomoTogglTimerGroup {
     STATE_FIELD: string = "System.State";
     REASON_FIELD: string = "System.Reason";
 
-    constructor(WorkItemFormService: any, AuthenticationService: any, Controls: any, StatusIndicator: any, dataService: any) {
+    constructor(WorkItemFormService: any, AuthenticationService: any, Controls: any, StatusIndicator: any, dataService: any, Dialogs: any) {
         this.authenticationService = AuthenticationService;
         this.workItemFormService = WorkItemFormService;
         this.controls = Controls;
         this.statusIndicator = StatusIndicator;
         this.dataService = dataService;
+        this.dialogs = Dialogs;
         this.webContext = VSS.getWebContext();
         this.initializeForm();
     }
@@ -70,7 +72,7 @@ class PomoTogglTimerGroup {
 
         this.loadAPIKey().then(() => {
             if (this.apiKey) {
-                this.fetchTogglInformations();
+                this.fetchTogglInformation();
             } else {
                 this.hideInfosFromToggl();
             }
@@ -86,7 +88,7 @@ class PomoTogglTimerGroup {
         $("#stopTimer").hide();
     }
 
-    fetchTogglInformations() {
+    fetchTogglInformation() {
         $.ajax({
             url: "./pomoTogglTimer/getUserData",
             data: { apikey: this.apiKey },
@@ -239,11 +241,11 @@ class PomoTogglTimerGroup {
             let min = (milliseconds / 1000 / 60) << 0;
             let sec = (milliseconds / 1000) % 60;
             let secZero = sec < 10 ? "0" : "";
-            $("#activeActivityStartTime").text(`${min.toFixed(0)}:${secZero}${sec.toFixed(0)}`);
+            $("#activeActivityStartTime").text(`${min.toFixed(0)}:${secZero}${parseInt(String(sec), 10)}`);
 
             // check if the timer is still on Toggl
             if (sec % 20 === 0) {
-                this.fetchTogglInformations();
+                this.fetchTogglInformation();
             }
 
             if (min === this.pomodoriSize) {
@@ -255,10 +257,10 @@ class PomoTogglTimerGroup {
                 } else {
                     this.pomodoriBreak = 5;
                 }
-                this.notify("Take a break!", `You completed a pomodori. Take ${this.pomodoriBreak} minutes break.`);
                 this.addPomodoriEntry();
                 this.breakTime();
                 this.stopCurrentTimer();
+                this.notify("Take a break!", `You completed a pomodori. Take ${this.pomodoriBreak} minutes break.`);
             }
         }, 1000);
     }
@@ -278,7 +280,7 @@ class PomoTogglTimerGroup {
                 type: "POST",
                 data: result,
                 success: (data) => {
-                    this.fetchTogglInformations();
+                    this.fetchTogglInformation();
                 },
                 error: (err) => {
                     alert("Not possible to start the timer. Error " + err.status + ": " + err.statusText);
@@ -361,39 +363,11 @@ class PomoTogglTimerGroup {
     };
 
     notify(title: string, body: string) {
-        let options = {
-            body,
-            badge: "https://vso-toggl-pomo.azurewebsites.net/images/active-16.png",
-            icon: "https://vso-toggl-pomo.azurewebsites.net/images/toggl_wide.png",
-            vibrate: [200, 100, 200],
-            requireInteraction: true,
-            sound: "/sounds/job-done.mp3"
-        };
-        let notification: any;
-
-        // let's check if the browser supports notifications
-        if (!("Notification" in window)) {
-            return false;
-        } else if (Notification.permission === "granted") {// let's check whether notification permissions have already been granted
-            // if it's okay let's create a notification
-            notification = new Notification(title, options);
-        } else if (Notification.permission !== "denied") { // otherwise, we need to ask the user for permission
-            Notification.requestPermission(function (permission: string) {
-                // if the user accepts, let's create a notification
-                if (permission === "granted") {
-                    notification = new Notification(title, options);
-                }
-            });
-        }
-
-        notification.onclick = function(){
-            window.focus();
-            this.close();
-        };
-
-        // finally, if the user has denied notifications and you 
-        // want to be respectful there is no need to bother them any more.
-        return notification;
+        this.dialogs.show(this.dialogs.ModalDialog, {
+            okText: "ok",
+            title,
+            contentText: body,
+        });
     }
 
     breakTime() {
