@@ -364,14 +364,29 @@ class PomoTogglTimerGroup {
 
     notify(title: string, body: string, thenDo: () => void, cancel?: () => void) {
         this.dialogs.show(this.dialogs.ModalDialog, {
-            okCallback: thenDo,
-            cancelCallback: cancel,
             title,
             contentText: body,
             resizable: false,
             hideCloseButton: true,
-            width: "100%",
-            height: "100%",
+            width: "80%",
+            height: "80%",
+            buttons: [
+                {
+                  text: "Ok",
+                  icon: "ui-icon-check",
+                  click: () => {
+                      thenDo();
+                      this.dialogs.close();
+                  }
+                },
+                {
+                    text: "Cancel",
+                    icon: "ui-icon-cancel",
+                    click: () => {
+                        this.dialogs.close();
+                    }
+                }
+            ],
         });
     }
 
