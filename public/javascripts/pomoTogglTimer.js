@@ -212,7 +212,7 @@ var PomoTogglTimerGroup = (function () {
             if (min === _this.pomodoriSize) {
                 _this.pomodoriStreak++;
                 if (_this.pomodoriStreak === 4) {
-                    _this.pomodoriBreak = 20;
+                    _this.pomodoriBreak = 15;
                     // reset streak
                     _this.pomodoriStreak = 0;
                 }
@@ -220,9 +220,8 @@ var PomoTogglTimerGroup = (function () {
                     _this.pomodoriBreak = 5;
                 }
                 _this.addPomodoriEntry();
-                _this.breakTime();
                 _this.stopCurrentTimer();
-                _this.notify("Take a break!", "You completed a pomodori. Take " + _this.pomodoriBreak + " minutes break.");
+                _this.notify("Take a break!", "You completed a pomodori. Take " + _this.pomodoriBreak + " minutes break.", function () { return _this.breakTime(); });
             }
         }, 1000);
     };
@@ -321,11 +320,15 @@ var PomoTogglTimerGroup = (function () {
         };
     };
     
-    PomoTogglTimerGroup.prototype.notify = function (title, body) {
+    PomoTogglTimerGroup.prototype.notify = function (title, body, thenDo, cancel) {
         this.dialogs.show(this.dialogs.ModalDialog, {
             okText: "ok",
+            okCallback: thenDo,
+            cancelCallback: cancel,
             title,
             contentText: body,
+            resizable: false,
+            hideCloseButton: true,
         });
     };
     PomoTogglTimerGroup.prototype.breakTime = function () {
@@ -341,8 +344,7 @@ var PomoTogglTimerGroup = (function () {
         var waitControl = this.controls.create(this.statusIndicator.WaitControl, container, waitControlOptions);
         waitControl.startWait();
         setTimeout(function () {
-            _this.notify("Break is over!", "It is time to get back to work.");
-            waitControl.endWait();
+            _this.notify("Break is over!", "It is time to get back to work.", function () { return waitControl.endWait(); }, function () { return waitControl.endWait(); });
         }, this.pomodoriBreak * 60 * 1000);
     };
     PomoTogglTimerGroup.prototype.onFormChanged = function (callback) {

@@ -251,16 +251,15 @@ class PomoTogglTimerGroup {
             if (min === this.pomodoriSize) {
                 this.pomodoriStreak++;
                 if (this.pomodoriStreak === 4) {
-                    this.pomodoriBreak = 20;
+                    this.pomodoriBreak = 15;
                     // reset streak
                     this.pomodoriStreak = 0;
                 } else {
                     this.pomodoriBreak = 5;
                 }
                 this.addPomodoriEntry();
-                this.breakTime();
                 this.stopCurrentTimer();
-                this.notify("Take a break!", `You completed a pomodori. Take ${this.pomodoriBreak} minutes break.`);
+                this.notify("Take a break!", `You completed a pomodori. Take ${this.pomodoriBreak} minutes break.`, () => this.breakTime());
             }
         }, 1000);
     }
@@ -362,11 +361,15 @@ class PomoTogglTimerGroup {
         };
     };
 
-    notify(title: string, body: string) {
+    notify(title: string, body: string, thenDo: () => void, cancel?: () => void) {
         this.dialogs.show(this.dialogs.ModalDialog, {
             okText: "ok",
+            okCallback: thenDo,
+            cancelCallback: cancel,
             title,
             contentText: body,
+            resizable: false,
+            hideCloseButton: true,
         });
     }
 
@@ -384,8 +387,7 @@ class PomoTogglTimerGroup {
         waitControl.startWait();
 
         setTimeout(() => {
-            this.notify("Break is over!", "It is time to get back to work.");
-            waitControl.endWait();
+            this.notify("Break is over!", "It is time to get back to work.", () => waitControl.endWait(), () => waitControl.endWait());
         }, this.pomodoriBreak * 60 * 1000);
     }
 
