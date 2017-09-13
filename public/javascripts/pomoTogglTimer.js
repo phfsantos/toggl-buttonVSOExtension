@@ -322,8 +322,7 @@ var PomoTogglTimerGroup = (function () {
     };
     
     PomoTogglTimerGroup.prototype.notify = function (title, body, thenDo, cancel) {
-        var _this = this;
-        this.dialogs.show(this.dialogs.ModalDialog, {
+        var dialog = this.dialogs.show(this.dialogs.ModalDialog, {
             title,
             contentText: body,
             resizable: false,
@@ -336,14 +335,14 @@ var PomoTogglTimerGroup = (function () {
                     icon: "ui-icon-check",
                     click: function () {
                         thenDo();
-                        _this.dialogs.close();
+                        dialog.close();
                     }
                 },
                 {
                     text: "Cancel",
                     icon: "ui-icon-cancel",
                     click: function () {
-                        _this.dialogs.close();
+                        dialog.close();
                     }
                 }
             ],
